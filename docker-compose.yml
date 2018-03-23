@@ -1,0 +1,58 @@
+version: '2'
+services:
+  streamdc:
+    image: "streamsets/datacollector"
+    container_name: "streamdc"
+    hostname: streamdc
+    restart: always
+    ports:
+      - 18630:18630
+    environment:
+      - DS_LICENSE=accept
+    volumes:
+      - ./dctutorial:/home/sdc/tutorial
+      - ./dcdata:/data
+      - ./streamsets-libs:/opt/streamsets-datacollector-3.1.1.0/streamsets-libs
+  main_node:
+    image: "store/datastax/dse-server:5.1.6"
+    container_name: "dse"
+    hostname: dse
+    ports:
+    - "4040:4040"
+    - "7080:7080"
+    - "7199:7199"
+    - "8182:8182"
+    - "8983:8983"
+    - "9042:9042"
+    environment:
+      - DS_LICENSE=accept
+      - CLUSTER_NAME=main
+    command:
+     -s
+    # Allow DSE to lock memory with mlock
+    cap_add:
+    - IPC_LOCK
+    ulimits:
+      memlock: -1
+    volumes:
+      - ./data:/var/lib/cassandra/data
+      - ./conf:/config
+      - ./logs:/var/lib/cassandra/commit_logs
+      - ./cache:/var/lib/cassandra/saved_caches
+      - ./confy:/etc/dse/conf
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    container_name: "zoo1"
+    hostname: "zoo1"
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka:0.10.1.1
+    container_name: "kafka1"
+    hostname: "kafka1"
+    ports:
+      - 9092
+    environment:
+      HOSTNAME_COMMAND: "ifconfig | awk '/Bcast:.+/{print $$2}' | awk -F\":\" '{print $$2}'"
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
