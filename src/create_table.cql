@@ -1,5 +1,5 @@
-CREATE KEYSPACE if not exists avro WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : '1' };
-drop table avro.cctest;
+CREATE KEYSPACE if not exists avro WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : '2' };
+// drop table avro.cctest;
 CREATE TABLE avro.cctest (transaction_date text, 
 card_number text, 
 card_expiry_date text, 

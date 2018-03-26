@@ -2,7 +2,9 @@
 Purpose of this project is to serve as an example for how to implement DataStax and Streamsets using docker images provided by DataStax, streamsets and open source Kafka.
 
 Four docker images  are used:   
-DataStax Server, Kafka, zookeeper, and streamsets data collector. The DataStax will be a 2 node cluster.
+DataStax Server, Kafka, zookeeper, and streamsets data collector. The DataStax will be a two node cluster.  
+The two nodes are needed to test the ability of streamsets to cope with the replication factor used in datastax handling and consolidating the separate replication writes to each node to one addition to the kafka topic.
+This set of nodes barely run on a macbook pro with 16GB of RAM.  Close all apps not in use to allow this to execute.  Deleting the second dse node allows the rest of the containers to run comfortably.  
 
 The DataStax images are well documented at this github location  [https://github.com/datastax/docker-images/]()
 
@@ -24,11 +26,37 @@ docker exec dse2 cqlsh -u cassandra -p cassandra -e "desc keyspaces"
 ```
 6. Add avro tables and keyspace for later DSE Search testing:
 ```
-docker cp create_table.cql dse:/opt/dse
-docker exec dse bash -c '/opt/dse/create_table.sh'
+docker cp src/create_table.cql dse:/opt/dse
+docker exec dse cqlsh -f /opt/dse/create_table.cql
+```
+
+## enable change data capture
+
+export the cassandra.yaml file for each node, edit the yaml for each node to enable change data capture, and restart the docker nodes
+
+1. export the cassandra.yaml from one node into the appropriate nodes conf file`
+```
+docker cp dse:/opt/dse/resources/cassandra/conf/cassandra.yaml conf;
+```
+```
+docker cp dse2:/opt/dse/resources/cassandra/conf/cassandra.yaml conf2
+```
+2. edit each cassandra.yaml file to enable change data capture.  Set cdc_enabled to true and uncommand the cdc_total_spacke_in_mb and cdc_free_space_check_intreval_ms.  Reference the cassandra.diff file for details.
+3. Enable change data capture on the avro.cctest table
+```
+docker exec dse cqlsh -e "alter table avro.cctest with cdc=true"
+```
+4. restart the docker containers using:
+```
+docker-compose down
+```
+```
+docker-compose up -d
 ```
 
 ## Add Streamsets Pipelines
+
+As an alternative to creating these pipelines, the pipelines are exported in the exports directory.
 
 Streamsets pipeline documentation can be found here:
 
@@ -64,7 +92,7 @@ for this pipeline, we need some changes.  Follow these steps as documented:
 
 but skip the remaining steps.  Since we are using the card number as part of our primary key, we don't want to mask the card number.
 
-For step 4, add the Cassandra Destination and connect it to the Jython Evaluator.  It should look like this:
+4. Add the Cassandra Destination and connect it to the Jython Evaluator.  It should look like this:
 
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraPipeline.png)
 
@@ -77,5 +105,14 @@ In the Cassandra Destination "Cassandra" Tab:
 
 Map the cassandra table as below:
 
-
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraColumns.png)
+5. Ensure Data flowed into the cassandra table
+```
+docker exec dse cqlsh -e "select * from avro.cctest"
+```
+6. Verify change data capture data has been written to the cdc directory.  Must do a nodetool flush to ensure data is written
+```
+docker exec dse nodetool flush
+docker exec dse ls /var/lib/cassandra/cdc_raw
+```
+
