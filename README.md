@@ -106,11 +106,12 @@ In the Cassandra Destination "Cassandra" Tab:
 Map the cassandra table as below:
 
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraColumns.png)
-5. Ensure Data flowed into the cassandra table
+5. Start both of the pipleines and leave them running
+6. Ensure Data flowed into the cassandra table
 ```
 docker exec dse cqlsh -e "select * from avro.cctest"
 ```
-6. Verify change data capture data has been written to the cdc directory.  Must do a nodetool flush to ensure data is written
+7. Verify change data capture data has been written to the cdc directory.  Must do a nodetool flush to ensure data is written
 ```
 docker exec dse nodetool flush
 docker exec dse ls /var/lib/cassandra/cdc_raw
