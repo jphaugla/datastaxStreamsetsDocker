@@ -2,27 +2,29 @@
 Purpose of this project is to serve as an example for how to implement DataStax and Streamsets using docker images provided by DataStax, streamsets and open source Kafka.
 
 Four docker images  are used:   
-DataStax Server, Kafka, zookeeper, and streamsets data collector. The DataStax will be a two node cluster.  
-The two nodes are needed to test the ability of streamsets to cope with the replication factor used in datastax handling and consolidating the separate replication writes to each node to one addition to the kafka topic.
-This set of nodes barely run on a macbook pro with 16GB of RAM.  Close all apps not in use to allow this to execute.  Deleting the second dse node allows the rest of the containers to run comfortably.  
+DataStax Server, Kafka, zookeeper, and Streamsets data collector.   
 
 The DataStax images are well documented at this github location  [https://github.com/datastax/docker-images/]()
 
-A large portion of this demo is based on this kafka/streamsets tutorial:
+Creating custom Kafka producers and consumers can be an arduous process that requires manual coding. In this tutorial, a StreamSets Data Collector is used to create data ingest pipelines to write to Kafka using a Kafka Producer.  Then, a separate StreamSets pipeline reads from Kafka with a Kafka Consumer and writes to Cassandra with no handwritten code.  This Kafka consumer performs conversions of the data before writing the data to Cassandra.
 
-https://github.com/streamsets/tutorials/tree/master/tutorial-2
+![StreamsConsumer](README.photos/StreamsSetsBoth.png)
+
+Data will come from this Sample Data
+ [https://github.com/streamsets/tutorials/blob/master/sample_data/](sample_data)
+
+
 
 ## Getting Started
 1. Prepare Docker environment
-2. Pull this github into a directory  `git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git`
+2. Pull this github into a directory  
+```git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git
+```
 3. Follow notes from DataStax Docker github to pull the needed DataStax images.  Directions are here:  [https://github.com/datastax/docker-images/#datastax-platform-overview]().  Don't get too bogged down here.  The pull command is provided with this github in pull.sh. It is requried to have the docker login and subscription complete before running the pull.  The included docker-compose.yaml handles most everything else.
 4. Open terminal, then: `docker-compose up -d`
-5. Verify DataStax is working for both hosts:
+5. Verify DataStax is working for the DataStax hosts:
 ```
 docker exec dse cqlsh -u cassandra -p cassandra -e "desc keyspaces";
-```
-```
-docker exec dse2 cqlsh -u cassandra -p cassandra -e "desc keyspaces"
 ```
 6. Add avro tables and keyspace for later DSE Search testing:
 ```
@@ -30,33 +32,9 @@ docker cp src/create_table.cql dse:/opt/dse
 docker exec dse cqlsh -f /opt/dse/create_table.cql
 ```
 
-## enable change data capture
+## Streamsets Pipelines
 
-export the cassandra.yaml file for each node, edit the yaml for each node to enable change data capture, and restart the docker nodes
-
-1. export the cassandra.yaml from one node into the appropriate nodes conf file`
-```
-docker cp dse:/opt/dse/resources/cassandra/conf/cassandra.yaml conf;
-```
-```
-docker cp dse2:/opt/dse/resources/cassandra/conf/cassandra.yaml conf2
-```
-2. edit each cassandra.yaml file to enable change data capture.  Set cdc_enabled to true and uncommand the cdc_total_spacke_in_mb and cdc_free_space_check_intreval_ms.  Reference the cassandra.diff file for details.
-3. Enable change data capture on the avro.cctest table
-```
-docker exec dse cqlsh -e "alter table avro.cctest with cdc=true"
-```
-4. restart the docker containers using:
-```
-docker-compose down
-```
-```
-docker-compose up -d
-```
-
-## Add Streamsets Pipelines
-
-As an alternative to creating these pipelines, the pipelines are exported in the exports directory.
+As an alternative to creating these pipelines, the pipelines are exported in the exports directory.  This will be shown as a "shortcut" option.
 
 Streamsets pipeline documentation can be found here:
 
@@ -66,54 +44,109 @@ A pipeline describes the flow of data from the origin system to destination syst
 
 We will have a pipeline to pull data from an avro file and add it to kafka.  Then, a second pipeline will pull data from kafka and write to DataStax Cassandra
 
-This is close to what we will be doing except we will use Cassandra as the Destination instead of ElasticSearch and Amazon S3.
+## Create Kafka producer pipeline
 
-I also used Kafka 0.10
-
-this provides the overview
-https://github.com/streamsets/tutorials/tree/master/tutorial-2
-
-Then the detail for each pipeline is here:
-
-No changes needed for the avro to Kafka pipleline.  This document is from an older version of streamsets but the differences are minor.
-
-https://github.com/streamsets/tutorials/blob/master/tutorial-2/directory_to_kafkaproducer.md
+When completed, the pipeline will look like this:
+![StreamsProducer](README.photos/StreamSetsAvro.png)
 
 
-Since the second pipeline is going to ElasticSearch and Amazon S3, changes are needed to instead write to Cassandra
+### Creating a Pipeline
+1. Bring up the Streamsets Data Collector from the browser with localhost:18630
+2. Create a new Pipeline by clicking the **Create New Pipeline** button to bring up the New Pipeline dialog box.  Enter a Title and Description for the Pipeline and click **Save**.
+![Streamsets Pipeline](README.photos/StreamsetsNewPipeline.png)
 
-https://github.com/streamsets/tutorials/blob/master/tutorial-2/kafkaconsumer_to_multipledestinations.md
+#### Defining the Source
 
-for this pipeline, we need some changes.  Follow these steps as documented:
+* Drag the **Directory** origin stage into your canvas.
+* In the Configuration settings below, select the *Files* tab.
 
-1. Defining the source
-2. Field Converter
-3. Jython Evaluator
+* Enter the following settings:
+![Kafka Directory](README.photos/KafkaProducerDirectory.png)
+ * **Files Directory** - The absolute file path to the directory containing the sample .avro files.
+ * **File Name Pattern** - `cc*` - 
+ *The ccdata file in the samples directory is a bzip2 compressed Avro file.*  Data Collector will automatically detect and decrypt it on the fly.
+ * **Files Compression** - None. FYI, origins can read compressed Avro files automatically based on the header information in the files. There's no need to configure this property to read compressed Avro files.
 
-but skip the remaining steps.  Since we are using the card number as part of our primary key, we don't want to mask the card number.
+In the data format tab, choose Avro.
 
-4. Add the Cassandra Destination and connect it to the Jython Evaluator.  It should look like this:
+* In the *Post Processing* tab make sure **File Post Processing** is set to None.
 
+*Note: The Avro files already contain the schema that the origin will pick up and decode on the fly. If you'd like to override the default schema, enter the custom schema in the Avro tab.*
+
+#### Defining the Kafka Producer
+* Drag a **Kafka** Producer destination to the canvas.
+
+* In the Configuration settings, click the General tab. For Stage Library, select the version of Kafka that matches your environment.
+
+* Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`<hostname/ip>:<port>`. Set Topic to the name of your Kafka topic. And set Data Format to SDC Record.
+![Kafka Producer](README.photos/KafkaProducer.png)
+
+* For Data Format tab, choose SDC Record
+
+*SDC Record is the internal data format that is highly optimized for use within StreamSets Data Collector (SDC). Since we are going to be using another Data Collector pipeline to read from this Kafka topic we can use SDC Record to optimize performance. If you have a custom Kafka Consumer on the other side you may want to use one of the other data formats and decode it accordingly.*
+
+Use the Kafka Configuration section of this tab to enter any specific Kafka settings. 
+
+The pipeline is now ready to feed messages into Kafka.
+
+#### Preview the Data
+* Feel free to hit the Preview icon to examine the data before executing the pipeline.
+
+#### Execute the Pipeline
+* Hit the Start icon. If your Kafka server is up and running, the pipeline should start sending data to Kafka.
+
+## Create Kafka Consumer
+
+Once stage properties are added, the pipeline will look like this:
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraPipeline.png)
 
-Add the following Required Fields in the Cassandra Destination General Tab (without this step the pipeline will not populate Cassandra)
+1.  Add the **Kafka** consumer origin to the canvas
+2.  Provide the following information under the **Kafka** tab of the **Kafka** origin.
+![Kafka Origin](README.photos/KafkaOriginTab.png)
+Choose SDC Record under the Data Format tab
+3. For the Field Type Conversion, add the following conversion type information![Field Type Conversion](README.photos/FieldTypeConvert.png)
+4. Add the following jython code to create the credit card type field:  
+ 
+    ```
+for record in records:
+  try:
+    cc = record.value['card_number']
+    if cc == '':
+      error.write(record, "Credit Card Number was null")
+      continue
+
+    cc_type = ''
+    if cc.startswith('4'):
+      cc_type = 'Visa'
+    elif cc.startswith(('51','52','53','54','55')):
+      cc_type = 'MasterCard'
+    elif cc.startswith(('34','37')):
+      cc_type = 'AMEX'
+    elif cc.startswith(('300','301','302','303','304','305','36','38')):
+      cc_type = 'Diners Club'
+    elif cc.startswith(('6011','65')):
+      cc_type = 'Discover'
+    elif cc.startswith(('2131','1800','35')):
+      cc_type = 'JCB'
+    else:
+      cc_type = 'Other'
+
+    record.value['credit_card_type'] = cc_type
+    output.write(record)
+
+  except Exception as e:
+    # Send record to error
+    error.write(record, str(e))
+    ```      
+5. Add the following **Required Fields** in the Cassandra Destination General Tab (without this step the pipeline will not populate Cassandra)
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraRequired.png)
-
-In the Cassandra Destination "Cassandra" Tab:
-1. Add "dse" as the contact point
-2. V4 as the protocol version
-
-Map the cassandra table as below:
-
+6. In the Cassandra Destination **Cassandra** Tab:  
+  * Add **dse** as the contact point
+  * V4 as the protocol version
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraColumns.png)
-5. Start both of the pipleines and leave them running
-6. Ensure Data flowed into the cassandra table
+7. Start both of the pipleines and leave them running
+8. Ensure Data flowed into the cassandra table
 ```
 docker exec dse cqlsh -e "select * from avro.cctest"
 ```
-7. Verify change data capture data has been written to the cdc directory.  Must do a nodetool flush to ensure data is written
-```
-docker exec dse nodetool flush
-docker exec dse ls /var/lib/cassandra/cdc_raw
-```
-
+## Completed!
