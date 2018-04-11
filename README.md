@@ -21,7 +21,7 @@ Test data came from a streamsets tutorial github but I have copied the data into
 
   To checkout
 
-    3a. Goto https://store.docker.com/images/datastax
+    3a. Goto [https://store.docker.com/images/datastax](https://store.docker.com/images/datastax)
 
     3b. Click `Proceed to Checkout`
 
