@@ -10,9 +10,8 @@ services:
     environment:
       - DS_LICENSE=accept
     volumes:
-      - ./dctutorial:/home/sdc/tutorial
+      - ./dctutorial:/home/sdc/tutorial/origin2
       - ./dcdata:/data
-      - ./streamsets-libs:/opt/streamsets-datacollector-3.1.1.0/streamsets-libs
   main_node:
     image: "store/datastax/dse-server:5.1.6"
     container_name: "dse"
@@ -27,8 +26,6 @@ services:
     environment:
       - DS_LICENSE=accept
       - CLUSTER_NAME=main
-    command:
-     -s
     # Allow DSE to lock memory with mlock
     cap_add:
     - IPC_LOCK
