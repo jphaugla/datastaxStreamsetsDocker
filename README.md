@@ -10,7 +10,7 @@ Creating custom Kafka producers and consumers can be an arduous process that req
 
 ![StreamsConsumer](README.photos/StreamsSetsBoth.png)
 
-Data will come from this Sample Data
+Test data came from a streamsets tutorial github but I have copied the data into this github.
  [https://github.com/streamsets/tutorials/blob/master/sample_data/](sample_data)
 
 
@@ -18,20 +18,29 @@ Data will come from this Sample Data
 ## Getting Started
 1. Prepare Docker environment
 2. Pull this github into a directory  
-```git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git
-```
+    ```
+    git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git
+    ```
 3. Follow notes from DataStax Docker github to pull the needed DataStax images.  Directions are here:  [https://github.com/datastax/docker-images/#datastax-platform-overview]().  Don't get too bogged down here.  The pull command is provided with this github in pull.sh. It is requried to have the docker login and subscription complete before running the pull.  The included docker-compose.yaml handles most everything else.
-4. Open terminal, then: `docker-compose up -d`
+4. To run the docker images, open terminal and type: `docker-compose up -d`
 5. Verify DataStax is working for the DataStax hosts:
 ```
 docker exec dse cqlsh -u cassandra -p cassandra -e "desc keyspaces";
 ```
 6. Add avro tables and keyspace for later DSE Search testing:
 ```
-docker cp src/create_table.cql dse:/opt/dse
+docker cp src/create_table.cql dse:/opt/dse;
 docker exec dse cqlsh -f /opt/dse/create_table.cql
 ```
-
+7. Verify table exists:
+```
+docker exec dse cqlsh -e "desc avro.cctest"
+```
+8. Create the directory and add the avro source file to the streamsets datacollector
+    ```
+docker exec streamdc mkdir /home/sdc/tutorial/origin2;
+docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
+    ```
 ## Streamsets Pipelines
 
 As an alternative to creating these pipelines, the pipelines are exported in the exports directory.  This will be shown as a "shortcut" option.
@@ -49,9 +58,8 @@ We will have a pipeline to pull data from an avro file and add it to kafka.  The
 When completed, the pipeline will look like this:
 ![StreamsProducer](README.photos/StreamSetsAvro.png)
 
-
 ### Creating a Pipeline
-1. Bring up the Streamsets Data Collector from the browser with localhost:18630
+1. Bring up the Streamsets Data Collector from the browser with localhost:18630 using *admin* as both the username and the password
 2. Create a new Pipeline by clicking the **Create New Pipeline** button to bring up the New Pipeline dialog box.  Enter a Title and Description for the Pipeline and click **Save**.
 ![Streamsets Pipeline](README.photos/StreamsetsNewPipeline.png)
 
@@ -65,7 +73,6 @@ When completed, the pipeline will look like this:
  * **Files Directory** - The absolute file path to the directory containing the sample .avro files.
  * **File Name Pattern** - `cc*` - 
  *The ccdata file in the samples directory is a bzip2 compressed Avro file.*  Data Collector will automatically detect and decrypt it on the fly.
- * **Files Compression** - None. FYI, origins can read compressed Avro files automatically based on the header information in the files. There's no need to configure this property to read compressed Avro files.
 
 In the data format tab, choose Avro.
 
@@ -73,19 +80,25 @@ In the data format tab, choose Avro.
 
 *Note: The Avro files already contain the schema that the origin will pick up and decode on the fly. If you'd like to override the default schema, enter the custom schema in the Avro tab.*
 
+
+Add Additional Libraries to Stage Libraries section
+1. Click on *Package Manager* icon
+2. Select Apache Kafka version (0.10.0.0 for example)
+3. click the elipses buttons and select install
+4. Select latest jython and install
+5. Select latest Cassandra Java Driver and install
+6. click *Restart Data Collector*
+7. log back in to Streamsets Data collector
+
 #### Defining the Kafka Producer
-* Drag a **Kafka** Producer destination to the canvas.
 
-* In the Configuration settings, click the General tab. For Stage Library, select the version of Kafka that matches your environment.
-
-* Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`<hostname/ip>:<port>`. Set Topic to the name of your Kafka topic. And set Data Format to SDC Record.
+1. Drag a **Kafka** Producer destination to the canvas and connect the Directory to the Kafka Producer
+2. Click on the Kafka Producer.  
+3. Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`kafka1:9092`. Set Topic to the name of your Kafka topic (TestRun). And set Data Format to SDC Record.
 ![Kafka Producer](README.photos/KafkaProducer.png)
-
-* For Data Format tab, choose SDC Record
-
+4. In the *Data Format* tab, choose SDC Record
 *SDC Record is the internal data format that is highly optimized for use within StreamSets Data Collector (SDC). Since we are going to be using another Data Collector pipeline to read from this Kafka topic we can use SDC Record to optimize performance. If you have a custom Kafka Consumer on the other side you may want to use one of the other data formats and decode it accordingly.*
-
-Use the Kafka Configuration section of this tab to enter any specific Kafka settings. 
+5. In the *Error Records* tab, choose to discard the error messages
 
 The pipeline is now ready to feed messages into Kafka.
 
@@ -93,52 +106,24 @@ The pipeline is now ready to feed messages into Kafka.
 * Feel free to hit the Preview icon to examine the data before executing the pipeline.
 
 #### Execute the Pipeline
-* Hit the Start icon. If your Kafka server is up and running, the pipeline should start sending data to Kafka.
+* Hit the Start icon. If your Kafka server is up and running, the pipeline should start sending data to Kafka.  Watching the metrics, 10,000 rows should go to the producer.  To rerun, make sure to *reset origin* to restart the load from the beginning.
 
 ## Create Kafka Consumer
 
 Once stage properties are added, the pipeline will look like this:
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraPipeline.png)
 
-1.  Add the **Kafka** consumer origin to the canvas
-2.  Provide the following information under the **Kafka** tab of the **Kafka** origin.
+1.  Create another New Pipeline *Kafka to Cassandra*
+2.  Add the **Kafka** consumer origin to the canvas
+3.  Provide the following information under the **Kafka** tab of the **Kafka** origin.
 ![Kafka Origin](README.photos/KafkaOriginTab.png)
 Choose SDC Record under the Data Format tab
-3. For the Field Type Conversion, add the following conversion type information![Field Type Conversion](README.photos/FieldTypeConvert.png)
-4. Add the following jython code to create the credit card type field:  
- 
-    ```
-for record in records:
-  try:
-    cc = record.value['card_number']
-    if cc == '':
-      error.write(record, "Credit Card Number was null")
-      continue
-
-    cc_type = ''
-    if cc.startswith('4'):
-      cc_type = 'Visa'
-    elif cc.startswith(('51','52','53','54','55')):
-      cc_type = 'MasterCard'
-    elif cc.startswith(('34','37')):
-      cc_type = 'AMEX'
-    elif cc.startswith(('300','301','302','303','304','305','36','38')):
-      cc_type = 'Diners Club'
-    elif cc.startswith(('6011','65')):
-      cc_type = 'Discover'
-    elif cc.startswith(('2131','1800','35')):
-      cc_type = 'JCB'
-    else:
-      cc_type = 'Other'
-
-    record.value['credit_card_type'] = cc_type
-    output.write(record)
-
-  except Exception as e:
-    # Send record to error
-    error.write(record, str(e))
-    ```      
-5. Add the following **Required Fields** in the Cassandra Destination General Tab (without this step the pipeline will not populate Cassandra)
+4. Add the *Processor* called *Field Type Converter* to the Pipeline and connect it to the Kafka Consumer
+5. For the Field Type Conversion, add the following conversion type information![Field Type Conversion](README.photos/FieldTypeConvert.png)
+6. Add the *Processor* called *Jython Evaluator* and connect it to the *Field Type Converter*
+7. In the jython tab of the *Jython Evaluator* replace the Script code with content from the src/jython.py file. 
+8. Add the *Destination* called *Cassandra Java Driver* and connect it to the *Field Type Converter*
+9. Add the following **Required Fields** in the Cassandra Destination General Tab (without this step the pipeline will not populate Cassandra)
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraRequired.png)
 6. In the Cassandra Destination **Cassandra** Tab:  
   * Add **dse** as the contact point
