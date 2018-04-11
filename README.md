@@ -63,11 +63,11 @@ The package manager makes stage libraries available to pipelines.  The following
 
 1. Click on *Package Manager* icon ![Package Manager](README.photos/icon_PackageManager.png)
 2. Select Apache Kafka version (0.10.0.0 for example)
-3. click the elipses buttons and select install
-4. Select latest jython and install
-5. Select latest Cassandra Java Driver and install
-6. click *Restart Data Collector*
-7. log back in to Streamsets Data collector
+3. click the ellipsis buttons and select install
+4. click *Restart Data Collector*
+5. log back in to Streamsets Data collector
+6. Select latest *Jython* and install, restart, login
+7. Select latest *Cassandra Java Driver* and install, restart, login
 
 ## Create Kafka producer pipeline
 
@@ -96,13 +96,13 @@ In the data format tab, choose Avro.
 
 ### Defining the Kafka Producer
 
-1. Drag a **Kafka** Producer destination to the canvas and connect the Directory to the Kafka Producer
+1. Drag a **Kafka** Producer Destination to the canvas and connect the Directory to the Kafka Producer
 2. Click on the Kafka Producer.  
 3. Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`kafka1:9092`. Set Topic to the name of your Kafka topic (TestRun). And set Data Format to SDC Record.
 ![Kafka Producer](README.photos/KafkaProducer.png)
 4. In the *Data Format* tab, choose SDC Record
 *SDC Record is the internal data format that is highly optimized for use within StreamSets Data Collector (SDC). Since we are going to be using another Data Collector pipeline to read from this Kafka topic we can use SDC Record to optimize performance. If you have a custom Kafka Consumer on the other side you may want to use one of the other data formats and decode it accordingly.*
-5. In the *Error Records* tab, choose to discard the error messages
+5. Click on the pipeline canvas, got to the *Error Records* tab, choose to discard the error messages
 
 The pipeline is now ready to feed messages into Kafka.
 
@@ -110,7 +110,7 @@ The pipeline is now ready to feed messages into Kafka.
 * Feel free to hit the Preview icon to examine the data before executing the pipeline.
 
 #### Execute the Pipeline
-* Hit the Start icon. If your Kafka server is up and running, the pipeline should start sending data to Kafka.  Watching the metrics, 10,000 rows should go to the producer.  To rerun, make sure to *reset origin* to restart the load from the beginning.
+* Hit the Start icon. If your Kafka server is up and running, the pipeline should start sending data to Kafka.  Watching the metrics, 10,000 rows should go to the producer.  Stop the Pipelin using the red stop rectangle.  To rerun at a later time, make sure to *reset origin* (under the ellipsis) to restart the load from the beginning.
 
 ## Create Kafka Consumer
 
@@ -165,7 +165,8 @@ for record in records:
   * Add **dse** as the contact point
   * V4 as the protocol version
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraColumns.png)
-7. Start both of the pipleines and leave them running
+5. Click on the pipeline canvas, got to the *Error Records* tab, choose to discard the error messages
+7. Start both of the pipleines (start *Kafka to Cassandra* before starting *Avro to Cassandra*).  If records don't flow, try stopping, resetting the origin, and starting the *Avro to Kafka* pipeline while leaving the *Kafka to Cassandra* pipleline running
 8. Ensure Data flowed into the cassandra table
 ```bash
 docker exec dse cqlsh -e "select * from avro.cctest"
