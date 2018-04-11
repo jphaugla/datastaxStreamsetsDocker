@@ -23,7 +23,7 @@ Test data came from a streamsets tutorial github but I have copied the data into
     ```
 3. Follow notes from DataStax Docker github to pull the needed DataStax images.  Directions are here:  [https://github.com/datastax/docker-images/#datastax-platform-overview]().  Don't get too bogged down here.  The pull command is provided with this github in pull.sh. It is requried to have the docker login and subscription complete before running the pull.  The included docker-compose.yaml handles most everything else.
 4. To run the docker images, open terminal and type: `docker-compose up -d`
-5. Verify DataStax is working for the DataStax hosts:
+5. Verify DataStax is working for the DataStax hosts (this make take a minute or two for images and Cassandra to start):
 ```bash
 docker exec dse cqlsh -u cassandra -p cassandra -e "desc keyspaces";
 ```
@@ -38,7 +38,6 @@ docker exec dse cqlsh -e "desc avro.cctest"
 ```
 8. Create the directory and add the avro source file to the streamsets datacollector
 ```bash
-docker exec streamdc mkdir /home/sdc/tutorial/origin2;
 docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 ```
 
@@ -53,6 +52,10 @@ https://streamsets.com/documentation/datacollector/latest/help/#datacollector/Us
 A pipeline describes the flow of data from the origin system to destination systems and defines how to transform the data along the way.
 
 We will have a pipeline to pull data from an avro file and add it to kafka.  Then, a second pipeline will pull data from kafka and write to DataStax Cassandra
+
+## Open up the Streamsets Data Collector Interface
+
+* Bring up the Streamsets Data Collector from the browser with localhost:18630 using *admin* as both the username and the password
 
 ## Add Additional Libraries to Stage Libraries section
 
@@ -72,15 +75,12 @@ When completed, the pipeline will look like this:
 ![StreamsProducer](README.photos/StreamSetsAvro.png)
 
 ### Creating a Pipeline
-1. Bring up the Streamsets Data Collector from the browser with localhost:18630 using *admin* as both the username and the password
-2. Create a new Pipeline by clicking the **Create New Pipeline** button to bring up the New Pipeline dialog box.  Enter a Title and Description for the Pipeline and click **Save**.
+
+* Create a new Pipeline by clicking the **Create New Pipeline** button to bring up the New Pipeline dialog box.  Enter a Title and Description for the Pipeline and click **Save**.
 ![Streamsets Pipeline](README.photos/StreamsetsNewPipeline.png)
-
-#### Defining the Source
-
+### Defining the Source
 * Drag the **Directory** origin stage into your canvas.
 * In the Configuration settings below, select the *Files* tab.
-
 * Enter the following settings:
 ![Kafka Directory](README.photos/KafkaProducerDirectory.png)
  * **Files Directory** - The absolute file path to the directory containing the sample .avro files.
@@ -94,7 +94,7 @@ In the data format tab, choose Avro.
 *Note: The Avro files already contain the schema that the origin will pick up and decode on the fly. If you'd like to override the default schema, enter the custom schema in the Avro tab.*
 
 
-#### Defining the Kafka Producer
+### Defining the Kafka Producer
 
 1. Drag a **Kafka** Producer destination to the canvas and connect the Directory to the Kafka Producer
 2. Click on the Kafka Producer.  
