@@ -11,7 +11,7 @@ Creating custom Kafka producers and consumers can be an arduous process that req
 ![StreamsConsumer](README.photos/StreamsSetsBoth.png)
 
 Test data came from a streamsets tutorial github but I have copied the data into this github.
- [https://github.com/streamsets/tutorials/blob/master/sample_data/](sample_data)
+ [https://github.com/streamsets/tutorials/blob/master/sample_data/](https://github.com/streamsets/tutorials/blob/master/sample_data/)
 
 
 
