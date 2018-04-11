@@ -4,7 +4,7 @@ Purpose of this project is to serve as an example for how to implement DataStax 
 Four docker images  are used:   
 DataStax Server, Kafka, zookeeper, and Streamsets data collector.   
 
-The DataStax images are well documented at this github location  [https://github.com/datastax/docker-images/]()
+The DataStax images are well documented at this github location  [https://github.com/datastax/docker-images/](https://github.com/datastax/docker-images/)
 
 Creating custom Kafka producers and consumers can be an arduous process that requires manual coding. In this tutorial, a StreamSets Data Collector is used to create data ingest pipelines to write to Kafka using a Kafka Producer.  Then, a separate StreamSets pipeline reads from Kafka with a Kafka Consumer and writes to Cassandra with no handwritten code.  This Kafka consumer performs conversions of the data before writing the data to Cassandra.
 
