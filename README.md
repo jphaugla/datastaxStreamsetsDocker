@@ -37,10 +37,11 @@ docker exec dse cqlsh -f /opt/dse/create_table.cql
 docker exec dse cqlsh -e "desc avro.cctest"
 ```
 8. Create the directory and add the avro source file to the streamsets datacollector
-    ```
+```
 docker exec streamdc mkdir /home/sdc/tutorial/origin2;
 docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
-    ```
+```
+
 ## Streamsets Pipelines
 
 As an alternative to creating these pipelines, the pipelines are exported in the exports directory.  This will be shown as a "shortcut" option.
