@@ -1,5 +1,5 @@
-# DataStax with Streamsets
-Purpose of this project is to serve as an example for how to implement DataStax and Streamsets using docker images provided by DataStax, streamsets and open source Kafka.
+# Streaming from Kafka to DataStax with StreamSets
+Provides a quick-start example for how to implement DataStax and Streamsets using docker images provided by DataStax, streamsets and open source Kafka.
 
 Four docker images  are used:   
 DataStax Server, Kafka, zookeeper, and Streamsets data collector.   
@@ -13,17 +13,31 @@ Creating custom Kafka producers and consumers can be an arduous process that req
 Test data came from a streamsets tutorial github but I have copied the data into this github.
  [https://github.com/streamsets/tutorials/blob/master/sample_data/](https://github.com/streamsets/tutorials/blob/master/sample_data/)
 
+## Requirements
 
+1. Docker engine
+2. Docker Store login https://store.docker.com/
+3. In order to use DataStax Docker images, you need to complete a checkout form on the Docker Store.  The checkout is free and is required to associate your Docker Store login to permission to download the DataStax Enterprise Server container.
+
+  To checkout
+
+    3a. Goto https://store.docker.com/images/datastax
+
+    3b. Click `Proceed to Checkout`
+
+![DataStax Docker Store site](README.photos/DataStaxDockerStore.png))
+
+And complete the form.
 
 ## Getting Started
-1. Prepare Docker environment
-2. Pull this github into a directory  
+1. Open terminal and login to docker; i.e. `docker login`
+1. Pull this github repo into `datastaxStreamsetsDocker` directory  
     ```bash
     git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git
     ```
-3. Follow notes from DataStax Docker github to pull the needed DataStax images.  Directions are here:  [https://github.com/datastax/docker-images/#datastax-platform-overview](https://github.com/datastax/docker-images/#datastax-platform-overview).  Don't get too bogged down here.  The pull command is provided with this github in pull.sh. It is requried to have the docker login and subscription complete before running the pull.  The included docker-compose.yaml handles most everything else.
-4. To run the docker images, open terminal and type: `docker-compose up -d`
-5. Verify DataStax is working for the DataStax hosts (this make take a minute or two for images and Cassandra to start):
+3. `cd datastaxStreamsetsDocker`
+4. Start docker containers with `docker-compose up -d`
+5. Verify DataStax is working for the DataStax hosts (this may take a minute or two for images and Cassandra to start):
 ```bash
 docker exec dse cqlsh -u cassandra -p cassandra -e "desc keyspaces";
 ```
@@ -41,7 +55,7 @@ docker exec dse cqlsh -e "desc avro.cctest"
 docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 ```
 
-## Streamsets Pipelines
+## StreamSets Pipelines
 
 As an alternative to creating these pipelines, the pipelines are exported in the exports directory.  
 
@@ -84,7 +98,7 @@ When completed, the pipeline will look like this:
 * Enter the following settings:
 ![Kafka Directory](README.photos/KafkaProducerDirectory.png)
  * **Files Directory** - The absolute file path to the directory containing the sample .avro files.
- * **File Name Pattern** - `cc*` - 
+ * **File Name Pattern** - `cc*` -
  *The ccdata file in the samples directory is a bzip2 compressed Avro file.*  Data Collector will automatically detect and decrypt it on the fly.
 
 In the data format tab, choose Avro.
@@ -172,3 +186,10 @@ for record in records:
 docker exec dse cqlsh -e "select * from avro.cctest"
 ```
 ## Completed!
+
+
+## Further Reference
+
+[https://github.com/datastax/docker-images/#datastax-platform-overview](https://github.com/datastax/docker-images/#datastax-platform-overview).
+
+[StreamSets](https://github.com/datastax/docker-images/#datastax-platform-overview).
