@@ -21,7 +21,7 @@ Test data came from a streamsets tutorial github but I have copied the data into
     ```bash
     git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git
     ```
-3. Follow notes from DataStax Docker github to pull the needed DataStax images.  Directions are here:  [https://github.com/datastax/docker-images/#datastax-platform-overview]().  Don't get too bogged down here.  The pull command is provided with this github in pull.sh. It is requried to have the docker login and subscription complete before running the pull.  The included docker-compose.yaml handles most everything else.
+3. Follow notes from DataStax Docker github to pull the needed DataStax images.  Directions are here:  [https://github.com/datastax/docker-images/#datastax-platform-overview](https://github.com/datastax/docker-images/#datastax-platform-overview).  Don't get too bogged down here.  The pull command is provided with this github in pull.sh. It is requried to have the docker login and subscription complete before running the pull.  The included docker-compose.yaml handles most everything else.
 4. To run the docker images, open terminal and type: `docker-compose up -d`
 5. Verify DataStax is working for the DataStax hosts (this make take a minute or two for images and Cassandra to start):
 ```bash
