@@ -18,26 +18,26 @@ Test data came from a streamsets tutorial github but I have copied the data into
 ## Getting Started
 1. Prepare Docker environment
 2. Pull this github into a directory  
-    ```
+    ```bash
     git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git
     ```
 3. Follow notes from DataStax Docker github to pull the needed DataStax images.  Directions are here:  [https://github.com/datastax/docker-images/#datastax-platform-overview]().  Don't get too bogged down here.  The pull command is provided with this github in pull.sh. It is requried to have the docker login and subscription complete before running the pull.  The included docker-compose.yaml handles most everything else.
 4. To run the docker images, open terminal and type: `docker-compose up -d`
 5. Verify DataStax is working for the DataStax hosts:
-```
+```bash
 docker exec dse cqlsh -u cassandra -p cassandra -e "desc keyspaces";
 ```
 6. Add avro tables and keyspace for later DSE Search testing:
-```
+```bash
 docker cp src/create_table.cql dse:/opt/dse;
 docker exec dse cqlsh -f /opt/dse/create_table.cql
 ```
 7. Verify table exists:
-```
+```bash
 docker exec dse cqlsh -e "desc avro.cctest"
 ```
 8. Create the directory and add the avro source file to the streamsets datacollector
-```
+```bash
 docker exec streamdc mkdir /home/sdc/tutorial/origin2;
 docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 ```
@@ -167,7 +167,7 @@ for record in records:
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraColumns.png)
 7. Start both of the pipleines and leave them running
 8. Ensure Data flowed into the cassandra table
-```
+```bash
 docker exec dse cqlsh -e "select * from avro.cctest"
 ```
 ## Completed!
