@@ -122,7 +122,39 @@ Choose SDC Record under the Data Format tab
 4. Add the *Processor* called *Field Type Converter* to the Pipeline and connect it to the Kafka Consumer
 5. For the Field Type Conversion, add the following conversion type information![Field Type Conversion](README.photos/FieldTypeConvert.png)
 6. Add the *Processor* called *Jython Evaluator* and connect it to the *Field Type Converter*
-7. In the jython tab of the *Jython Evaluator* replace the Script code with content from the src/jython.py file. 
+7. In the *jython* tab of the *Jython Evaluator*, enter the following code
+```python
+
+for record in records:
+  try:
+    cc = record.value['card_number']
+    if cc == '':
+      error.write(record, "Credit Card Number was null")
+      continue
+
+    cc_type = ''
+    if cc.startswith('4'):
+      cc_type = 'Visa'
+    elif cc.startswith(('51','52','53','54','55')):
+      cc_type = 'MasterCard'
+    elif cc.startswith(('34','37')):
+      cc_type = 'AMEX'
+    elif cc.startswith(('300','301','302','303','304','305','36','38')):
+      cc_type = 'Diners Club'
+    elif cc.startswith(('6011','65')):
+      cc_type = 'Discover'
+    elif cc.startswith(('2131','1800','35')):
+      cc_type = 'JCB'
+    else:
+      cc_type = 'Other'
+
+    record.value['credit_card_type'] = cc_type
+    output.write(record)
+
+  except Exception as e:
+    # Send record to error
+    error.write(record, str(e))
+```
 8. Add the *Destination* called *Cassandra Java Driver* and connect it to the *Field Type Converter*
 9. Add the following **Required Fields** in the Cassandra Destination General Tab (without this step the pipeline will not populate Cassandra)
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraRequired.png)
