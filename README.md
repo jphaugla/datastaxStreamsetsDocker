@@ -1,17 +1,11 @@
 # Streaming from Kafka to DataStax with StreamSets
-Provides a quick-start example for how to implement DataStax and Streamsets using docker images provided by DataStax, streamsets and open source Kafka.
+Provides a quick-start example of streaming data from Kafka to DataStax Enterprise (DSE) with StreamSets.
 
-Four docker images  are used:   
-DataStax Server, Kafka, zookeeper, and Streamsets data collector.   
 
-The DataStax images are well documented at this github location  [https://github.com/datastax/docker-images/](https://github.com/datastax/docker-images/)
-
-Creating custom Kafka producers and consumers can be an arduous process that requires manual coding. In this tutorial, a StreamSets Data Collector is used to create data ingest pipelines to write to Kafka using a Kafka Producer.  Then, a separate StreamSets pipeline reads from Kafka with a Kafka Consumer and writes to Cassandra with no handwritten code.  This Kafka consumer performs conversions of the data before writing the data to Cassandra.
+## Overview
+Creating custom Kafka producers and consumers can be an arduous process requiring hand-coding and difficult to operationalize. In this tutorial, the StreamSets Data Collector is used to create streaming data pipelines to write to/from Kafka and land in DSE.  The high-level architecture is shown in the following diagram:
 
 ![StreamsConsumer](README.photos/StreamsSetsBoth.png)
-
-Test data came from a streamsets tutorial github but I have copied the data into this github.
- [https://github.com/streamsets/tutorials/blob/master/sample_data/](https://github.com/streamsets/tutorials/blob/master/sample_data/)
 
 ## Requirements
 
@@ -21,9 +15,9 @@ Test data came from a streamsets tutorial github but I have copied the data into
 
   To checkout
 
-    3a. Goto [https://store.docker.com/images/datastax](https://store.docker.com/images/datastax)
+    * Goto [https://store.docker.com/images/datastax](https://store.docker.com/images/datastax)
 
-    3b. Click `Proceed to Checkout`
+    * Click `Proceed to Checkout`
 
 ![DataStax Docker Store site](README.photos/DataStaxDockerStore.png))
 
@@ -31,17 +25,18 @@ And complete the form.
 
 ## Getting Started
 1. Open terminal and login to docker; i.e. `docker login`
-1. Pull this github repo into `datastaxStreamsetsDocker` directory  
+2. Pull this github repo into `datastaxStreamsetsDocker` directory  
     ```bash
     git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git
     ```
 3. `cd datastaxStreamsetsDocker`
 4. Start docker containers with `docker-compose up -d`
-5. Verify DataStax is working for the DataStax hosts (this may take a minute or two for images and Cassandra to start):
+5. Wait 1 minute for containers to startup
+5. Verify DataStax is working for the DataStax hosts (again, see previous setp, this may take a minute or two for images and Cassandra to start):
 ```bash
 docker exec dse cqlsh -u cassandra -p cassandra -e "desc keyspaces";
 ```
-6. Add avro tables and keyspace for later DSE Search testing:
+6. Create keyspace and table in DSE:
 ```bash
 docker cp src/create_table.cql dse:/opt/dse;
 docker exec dse cqlsh -f /opt/dse/create_table.cql
@@ -190,6 +185,10 @@ docker exec dse cqlsh -e "select * from avro.cctest"
 
 ## Further Reference
 
+* DataStax Docker Images
 [https://github.com/datastax/docker-images/#datastax-platform-overview](https://github.com/datastax/docker-images/#datastax-platform-overview).
 
-[StreamSets](https://github.com/datastax/docker-images/#datastax-platform-overview).
+* [StreamSets](https://www.streamsets.com)
+
+* Test data came from a streamsets tutorial github but I have copied the data into this github.
+ [https://github.com/streamsets/tutorials/blob/master/sample_data/](https://github.com/streamsets/tutorials/blob/master/sample_data/)
