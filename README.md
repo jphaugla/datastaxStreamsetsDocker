@@ -44,7 +44,7 @@ docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 
 ## Streamsets Pipelines
 
-As an alternative to creating these pipelines, the pipelines are exported in the exports directory.  This will be shown as a "shortcut" option.
+As an alternative to creating these pipelines, the pipelines are exported in the exports directory.  
 
 Streamsets pipeline documentation can be found here:
 
@@ -53,6 +53,18 @@ https://streamsets.com/documentation/datacollector/latest/help/#datacollector/Us
 A pipeline describes the flow of data from the origin system to destination systems and defines how to transform the data along the way.
 
 We will have a pipeline to pull data from an avro file and add it to kafka.  Then, a second pipeline will pull data from kafka and write to DataStax Cassandra
+
+## Add Additional Libraries to Stage Libraries section
+
+The package manager makes stage libraries available to pipelines.  The following three stage libraries need to be added for the subsequent pipelines.
+
+1. Click on *Package Manager* icon ![Package Manager](README.photos/packageManager.JPG)
+2. Select Apache Kafka version (0.10.0.0 for example)
+3. click the elipses buttons and select install
+4. Select latest jython and install
+5. Select latest Cassandra Java Driver and install
+6. click *Restart Data Collector*
+7. log back in to Streamsets Data collector
 
 ## Create Kafka producer pipeline
 
@@ -81,15 +93,6 @@ In the data format tab, choose Avro.
 
 *Note: The Avro files already contain the schema that the origin will pick up and decode on the fly. If you'd like to override the default schema, enter the custom schema in the Avro tab.*
 
-
-Add Additional Libraries to Stage Libraries section
-1. Click on *Package Manager* icon
-2. Select Apache Kafka version (0.10.0.0 for example)
-3. click the elipses buttons and select install
-4. Select latest jython and install
-5. Select latest Cassandra Java Driver and install
-6. click *Restart Data Collector*
-7. log back in to Streamsets Data collector
 
 #### Defining the Kafka Producer
 
