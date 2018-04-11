@@ -166,7 +166,7 @@ for record in records:
   * V4 as the protocol version
 ![Streamsets Pipeline](README.photos/StreamsetsCassandraColumns.png)
 5. Click on the pipeline canvas, got to the *Error Records* tab, choose to discard the error messages
-7. Start both of the pipleines (start *Kafka to Cassandra* before starting *Avro to Cassandra*).  If records don't flow, try stopping, resetting the origin, and starting the *Avro to Kafka* pipeline while leaving the *Kafka to Cassandra* pipleline running
+7. Start both of the pipleines (start *Kafka to Cassandra* before starting *Avro to Cassandra*).  If records don't flow, try stopping, resetting the origin, and starting the *Avro to Kafka* pipeline while leaving the *Kafka to Cassandra* pipeline running
 8. Ensure Data flowed into the cassandra table
 ```bash
 docker exec dse cqlsh -e "select * from avro.cctest"
