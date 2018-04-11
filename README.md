@@ -58,7 +58,7 @@ We will have a pipeline to pull data from an avro file and add it to kafka.  The
 
 The package manager makes stage libraries available to pipelines.  The following three stage libraries need to be added for the subsequent pipelines.
 
-1. Click on *Package Manager* icon ![Package Manager](README.photos/packageManager.JPG)
+1. Click on *Package Manager* icon ![Package Manager](README.photos/icon_PackageManager.png)
 2. Select Apache Kafka version (0.10.0.0 for example)
 3. click the elipses buttons and select install
 4. Select latest jython and install
