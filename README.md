@@ -3,9 +3,9 @@ Provides a quick-start example of streaming data from Kafka to DataStax Enterpri
 
 
 ## Overview
-Creating custom Kafka producers and consumers can be an arduous process requiring hand-coding and difficult to operationalize. In this tutorial, the StreamSets Data Collector is used to create streaming data pipelines to write to/from Kafka and land in DSE.  The high-level architecture is shown in the following diagram:
+In this tutorial, the StreamSets Data Collector is used to create streaming data pipelines to write to/from Kafka and ultimately landing in DSE.  The high-level architecture is shown in the following diagram:
 
-![StreamsConsumer](README.photos/StreamsSetsBoth.png)
+![StreamsConsumer](README.photos/StreamSetsBoth.png)
 
 ## Requirements
 
@@ -32,7 +32,7 @@ And complete the form.
 3. `cd datastaxStreamsetsDocker`
 4. Start docker containers with `docker-compose up -d`
 5. Wait 1 minute for containers to startup
-5. Verify DataStax is working for the DataStax hosts (again, see previous setp, this may take a minute or two for images and Cassandra to start):
+5. Verify DataStax is up-and-running (again, see previous step, this may take a minute or two for Docker images):
 ```bash
 docker exec dse cqlsh -u cassandra -p cassandra -e "desc keyspaces";
 ```
@@ -45,26 +45,27 @@ docker exec dse cqlsh -f /opt/dse/create_table.cql
 ```bash
 docker exec dse cqlsh -e "desc avro.cctest"
 ```
-8. Create the directory and add the avro source file to the streamsets datacollector
+8. Create the directory and add the avro source file to the StreamSets Data Collector
 ```bash
 docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 ```
+
 
 ## StreamSets Pipelines
 
 As an alternative to creating these pipelines, the pipelines are exported in the exports directory.  
 
-Streamsets pipeline documentation can be found here:
+StreamSets pipeline documentation can be found here:
 
-https://streamsets.com/documentation/datacollector/latest/help/#datacollector/UserGuide/Pipeline_Design/What_isa_Pipeline.html
+https://streamsets.com/documentation/Data Collector/latest/help/#Data Collector/UserGuide/Pipeline_Design/What_isa_Pipeline.html
 
 A pipeline describes the flow of data from the origin system to destination systems and defines how to transform the data along the way.
 
 We will have a pipeline to pull data from an avro file and add it to kafka.  Then, a second pipeline will pull data from kafka and write to DataStax Cassandra
 
-## Open up the Streamsets Data Collector Interface
+## Open up the StreamSets Data Collector Interface
 
-* Bring up the Streamsets Data Collector from the browser with localhost:18630 using *admin* as both the username and the password
+* Bring up the StreamSets Data Collector from the browser with localhost:18630 using *admin* as both the username and the password
 
 ## Add Additional Libraries to Stage Libraries section
 
@@ -74,7 +75,7 @@ The package manager makes stage libraries available to pipelines.  The following
 2. Select Apache Kafka version (0.10.0.0 for example)
 3. click the ellipsis buttons and select install
 4. click *Restart Data Collector*
-5. log back in to Streamsets Data collector
+5. log back in to StreamSets Data collector
 6. Select latest *Jython* and install, restart, login
 7. Select latest *Cassandra Java Driver* and install, restart, login
 
@@ -86,7 +87,7 @@ When completed, the pipeline will look like this:
 ### Creating a Pipeline
 
 * Create a new Pipeline by clicking the **Create New Pipeline** button to bring up the New Pipeline dialog box.  Enter a Title and Description for the Pipeline and click **Save**.
-![Streamsets Pipeline](README.photos/StreamsetsNewPipeline.png)
+![StreamSets Pipeline](README.photos/StreamsetsNewPipeline.png)
 ### Defining the Source
 * Drag the **Directory** origin stage into your canvas.
 * In the Configuration settings below, select the *Files* tab.
@@ -124,7 +125,7 @@ The pipeline is now ready to feed messages into Kafka.
 ## Create Kafka Consumer
 
 Once stage properties are added, the pipeline will look like this:
-![Streamsets Pipeline](README.photos/StreamsetsCassandraPipeline.png)
+![StreamSets Pipeline](README.photos/StreamsetsCassandraPipeline.png)
 
 1.  Create another New Pipeline *Kafka to Cassandra*
 2.  Add the **Kafka** consumer origin to the canvas
@@ -169,11 +170,11 @@ for record in records:
 ```
 8. Add the *Destination* called *Cassandra Java Driver* and connect it to the *Field Type Converter*
 9. Add the following **Required Fields** in the Cassandra Destination General Tab (without this step the pipeline will not populate Cassandra)
-![Streamsets Pipeline](README.photos/StreamsetsCassandraRequired.png)
+![StreamSets Pipeline](README.photos/StreamsetsCassandraRequired.png)
 6. In the Cassandra Destination **Cassandra** Tab:  
   * Add **dse** as the contact point
   * V4 as the protocol version
-![Streamsets Pipeline](README.photos/StreamsetsCassandraColumns.png)
+![StreamSets Pipeline](README.photos/StreamsetsCassandraColumns.png)
 5. Click on the pipeline canvas, got to the *Error Records* tab, choose to discard the error messages
 7. Start both of the pipleines (start *Kafka to Cassandra* before starting *Avro to Cassandra*).  If records don't flow, try stopping, resetting the origin, and starting the *Avro to Kafka* pipeline while leaving the *Kafka to Cassandra* pipeline running
 8. Ensure Data flowed into the cassandra table
@@ -190,5 +191,5 @@ docker exec dse cqlsh -e "select * from avro.cctest"
 
 * [StreamSets](https://www.streamsets.com)
 
-* Test data came from a streamsets tutorial github but I have copied the data into this github.
+* Test data came from a StreamSets tutorial github but I have copied the data into this github.
  [https://github.com/streamsets/tutorials/blob/master/sample_data/](https://github.com/streamsets/tutorials/blob/master/sample_data/)
