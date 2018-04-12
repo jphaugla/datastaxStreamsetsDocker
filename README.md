@@ -1,5 +1,5 @@
 # Streaming from Kafka to DataStax with StreamSets
-Provides a quick-start example of streaming data from Kafka to DataStax Enterprise (DSE) with StreamSets.
+Provides a quick-start example of streaming data from Kafka to DataStax Enterprise (DSE) with StreamSets Data Collector.
 
 
 ## Overview
@@ -9,9 +9,9 @@ In this tutorial, the StreamSets Data Collector is used to create streaming data
 
 ## Requirements
 
-1. Docker engine
+1. Docker engine (Free CE version works fine https://www.docker.com/community-edition)
 2. Docker Store login https://store.docker.com/
-3. In order to use DataStax Docker images, you need to complete a checkout form on the Docker Store.  The checkout is free and is required to associate your Docker Store login to permission to download the DataStax Enterprise Server container.
+3. In order to use DataStax Docker images, you need to complete a checkout form on the Docker Store.  The checkout is free and is required to associate your Docker Store login with permission to download the DataStax Enterprise Server container.
 
 To checkout
   * Goto https://store.docker.com/images/datastax
@@ -64,18 +64,6 @@ We will have a pipeline to pull data from an avro file and add it to kafka.  The
 ## Open up the StreamSets Data Collector Interface
 
 * Bring up the StreamSets Data Collector from the browser with localhost:18630 using *admin* as both the username and the password
-
-## Add Additional Libraries to Stage Libraries section
-
-The package manager makes stage libraries available to pipelines.  The following three stage libraries need to be added for the subsequent pipelines.
-
-1. Click on *Package Manager* icon ![Package Manager](README.photos/icon_PackageManager.png)
-2. Select Apache Kafka version (0.10.0.0 for example)
-3. click the ellipsis buttons and select install
-4. click *Restart Data Collector*
-5. log back in to StreamSets Data collector
-6. Select latest *Jython* and install, restart, login
-7. Select latest *Cassandra Java Driver* and install, restart, login
 
 ## Create Kafka producer pipeline
 
@@ -135,7 +123,6 @@ Choose SDC Record under the Data Format tab
 6. Add the *Processor* called *Jython Evaluator* and connect it to the *Field Type Converter*
 7. In the *jython* tab of the *Jython Evaluator*, enter the following code
 ```python
-
 for record in records:
   try:
     cc = record.value['card_number']
@@ -187,7 +174,7 @@ docker exec dse cqlsh -e "select * from avro.cctest"
 * DataStax Docker Images
 [https://github.com/datastax/docker-images/#datastax-platform-overview](https://github.com/datastax/docker-images/#datastax-platform-overview).
 
-* [StreamSets](https://www.streamsets.com)
+* [StreamSets Docker Images](https://github.com/streamsets/datacollector-docker.git)
 
 * Test data came from a StreamSets tutorial github but I have copied the data into this github.
  [https://github.com/streamsets/tutorials/blob/master/sample_data/](https://github.com/streamsets/tutorials/blob/master/sample_data/)

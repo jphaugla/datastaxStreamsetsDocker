@@ -1,14 +1,12 @@
 version: '2'
 services:
   streamdc:
-    image: "streamsets/datacollector"
+    image: "tmcgrath/streamsets-datastax"
     container_name: "streamdc"
     hostname: streamdc
     restart: always
     ports:
       - 18630:18630
-    environment:
-      - DS_LICENSE=accept
     volumes:
       - ./dctutorial:/home/sdc/tutorial/origin2
       - ./dcdata:/data
