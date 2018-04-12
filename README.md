@@ -106,7 +106,7 @@ The pipeline is now ready to feed messages into Kafka.
 * Feel free to hit the Preview icon to examine the data before executing the pipeline.
 
 #### Execute the Pipeline
-* Hit the Start icon. If your Kafka server is up and running, the pipeline should start sending data to Kafka.  Watching the metrics, 10,000 rows should go to the producer.  Stop the Pipelin using the red stop rectangle.  To rerun at a later time, make sure to **reset origin** (under the ellipsis) to restart the load from the beginning.
+* Hit the Start icon. If your Kafka server is up and running, the pipeline should start sending data to Kafka.  Watching the metrics, 10,000 rows should go to the producer.  Stop the pipeline using the red stop rectangle.  To rerun at a later time, make sure to **reset origin** (under the ellipsis) to restart the load from the beginning.
 
 ## Create Kafka Consumer
 
