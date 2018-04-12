@@ -49,9 +49,28 @@ docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 ```
 
 
-## StreamSets Pipelines
+## Running and Creating StreamSets Pipelines
 
-As an alternative to creating these pipelines, the pipelines are exported in the exports directory.  
+At this point, you have a choices between two options: Easy and Advanced.  Easy is import pre-configured pipelines and run.  Advanced approach of manually creating the pipelines and then running.
+
+### Easy - Get things running as fast as possible
+
+Here's what we're going to do
+
+![StreamsProducer](README.photos/DataStaxStreamSetsKafka.gif)
+
+The steps shown in the above screencast
+
+1. Login to StreamSets Data Collector at http://localhost:18630 with username: admin password: admin
+2. Import the `exports/Kafka Consumer to DSE.json` pipeline and start
+3. Import the `exports/Files to Kafka.json` pipeline and start
+4. Verify data has landed in DSE from terminal with `docker exec dse cqlsh -e "select * from avro.cctest limit 10"`
+
+That's it.  Easy button.
+
+Note: if you start/stop pipelines in the future.  You will likely need to "Reset Origin" of both pipelines.  Please consult StreamSets documentation for more information around resetting pipeline origins.
+
+### Advanced - Create the pipelines manually
 
 StreamSets pipeline documentation can be found here:
 
@@ -166,6 +185,7 @@ for record in records:
 ```bash
 docker exec dse cqlsh -e "select * from avro.cctest"
 ```
+
 ## Completed!
 
 
@@ -173,6 +193,8 @@ docker exec dse cqlsh -e "select * from avro.cctest"
 
 * DataStax Docker Images
 [https://github.com/datastax/docker-images/#datastax-platform-overview](https://github.com/datastax/docker-images/#datastax-platform-overview).
+
+* [StreamSets Data Collector](https://streamsets.com/)
 
 * [StreamSets Docker Images](https://github.com/streamsets/datacollector-docker.git)
 
