@@ -13,8 +13,8 @@ In this tutorial, the StreamSets Data Collector is used to create streaming data
 2. Docker Store login https://store.docker.com/
 3. In order to use DataStax Docker images, you need to complete a checkout form on the Docker Store.  The checkout is free and is required to associate your Docker Store login to permission to download the DataStax Enterprise Server container.
 
-  To checkout
-  * Goto [https://store.docker.com/images/datastax](https://store.docker.com/images/datastax)
+To checkout
+  * Goto https://store.docker.com/images/datastax
   * Click `Proceed to Checkout` as shown
 
 ![DataStax Docker Store site](README.photos/DataStaxDockerStore.png)
