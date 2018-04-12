@@ -121,7 +121,7 @@ Choose SDC Record under the Data Format tab
 4. Add the *Processor* called *Field Type Converter* to the Pipeline and connect it to the Kafka Consumer
 5. For the Field Type Conversion, add the following conversion type information![Field Type Conversion](README.photos/FieldTypeConvert.png)
 6. Add the *Processor* called *Jython Evaluator* and connect it to the *Field Type Converter*
-7. In the *jython* tab of the *Jython Evaluator*, enter the following code
+7. In the *Jython* tab of the *Jython Evaluator*, in the *Script* section, enter the following code
 ```python
 for record in records:
   try:
@@ -153,7 +153,7 @@ for record in records:
     # Send record to error
     error.write(record, str(e))
 ```
-8. Add the *Destination* called *Cassandra Java Driver* and connect it to the *Field Type Converter*
+8. Add the *Destination* called *Cassandra Java Driver* and connect it to the *Jython Evaluator*
 9. Add the following **Required Fields** in the Cassandra Destination General Tab (without this step the pipeline will not populate Cassandra)
 ![StreamSets Pipeline](README.photos/StreamsetsCassandraRequired.png)
 6. In the Cassandra Destination **Cassandra** Tab:  
