@@ -63,7 +63,7 @@ We will have a pipeline to pull data from an avro file and add it to kafka.  The
 
 ## Open up the StreamSets Data Collector Interface
 
-* Bring up the StreamSets Data Collector from the browser with localhost:18630 using *admin* as both the username and the password
+* Bring up the StreamSets Data Collector from the browser with localhost:18630 using **admin** as both the username and the password
 
 ## Create Kafka producer pipeline
 
@@ -76,7 +76,7 @@ When completed, the pipeline will look like this:
 ![StreamSets Pipeline](README.photos/StreamsetsNewPipeline.png)
 ### Defining the Source
 * Drag the **Directory** origin stage into your canvas.
-* In the Configuration settings below, select the *Files* tab.
+* In the Configuration settings below, select the **Files** tab.
 * Enter the following settings:
 ![Kafka Directory](README.photos/KafkaProducerDirectory.png)
  * **Files Directory** - The absolute file path to the directory containing the sample .avro files.
@@ -85,7 +85,7 @@ When completed, the pipeline will look like this:
 
 In the data format tab, choose Avro.
 
-* In the *Post Processing* tab make sure **File Post Processing** is set to None.
+* In the **Post Processing** tab make sure **File Post Processing** is set to None.
 
 *Note: The Avro files already contain the schema that the origin will pick up and decode on the fly. If you'd like to override the default schema, enter the custom schema in the Avro tab.*
 
@@ -94,11 +94,11 @@ In the data format tab, choose Avro.
 
 1. Drag a **Kafka** Producer Destination to the canvas and connect the Directory to the Kafka Producer
 2. Click on the Kafka Producer.  
-3. On the General Tab, set the Stage Library version to *Apache Kafka 0.11.0.0*.  Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`kafka1:9092`. Set Topic to the name of your Kafka topic (TestRun).  Finally, the set Data Format to SDC Record.
+3. On the General Tab, set the Stage Library version to **Apache Kafka 0.11.0.0**.  Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`kafka1:9092`. Set Topic to the name of your Kafka topic (TestRun).  Finally, the set Data Format to SDC Record.
 ![Kafka Producer](README.photos/KafkaProducer.png)
-4. In the *Data Format* tab, choose SDC Record
+4. In the **Data Format** tab, choose SDC Record
 *SDC Record is the internal data format that is highly optimized for use within StreamSets Data Collector (SDC). Since we are going to be using another Data Collector pipeline to read from this Kafka topic we can use SDC Record to optimize performance. If you have a custom Kafka Consumer on the other side you may want to use one of the other data formats and decode it accordingly.*
-5. Click on the pipeline canvas, got to the *Error Records* tab, choose to discard the error messages
+5. Click on the pipeline canvas, got to the **Error Records** tab, choose to discard the error messages
 
 The pipeline is now ready to feed messages into Kafka.
 
@@ -106,22 +106,22 @@ The pipeline is now ready to feed messages into Kafka.
 * Feel free to hit the Preview icon to examine the data before executing the pipeline.
 
 #### Execute the Pipeline
-* Hit the Start icon. If your Kafka server is up and running, the pipeline should start sending data to Kafka.  Watching the metrics, 10,000 rows should go to the producer.  Stop the Pipelin using the red stop rectangle.  To rerun at a later time, make sure to *reset origin* (under the ellipsis) to restart the load from the beginning.
+* Hit the Start icon. If your Kafka server is up and running, the pipeline should start sending data to Kafka.  Watching the metrics, 10,000 rows should go to the producer.  Stop the Pipelin using the red stop rectangle.  To rerun at a later time, make sure to **reset origin** (under the ellipsis) to restart the load from the beginning.
 
 ## Create Kafka Consumer
 
 Once stage properties are added, the pipeline will look like this:
 ![StreamSets Pipeline](README.photos/StreamsetsCassandraPipeline.png)
 
-1.  Create another New Pipeline *Kafka to Cassandra*
+1.  Create another New Pipeline **Kafka to Cassandra**
 2.  Add the **Kafka** consumer origin to the canvas
-3.  Under the General tab, select *Apache Kafka 0.11.0.0 for the *Stage Libary*.  Provide the following information under the **Kafka** tab of the **Kafka** origin.
+3.  Under the General tab, select **Apache Kafka 0.11.0.0** for the **Stage Libary**.  Provide the following information under the **Kafka** tab of the **Kafka** origin.
 ![Kafka Origin](README.photos/KafkaOriginTab.png)
 Choose SDC Record under the Data Format tab
-4. Add the *Processor* called *Field Type Converter* to the Pipeline and connect it to the Kafka Consumer
+4. Add the **Processor** called **Field Type Converter** to the Pipeline and connect it to the Kafka Consumer
 5. For the Field Type Conversion, add the following conversion type information![Field Type Conversion](README.photos/FieldTypeConvert.png)
-6. Add the *Processor* called *Jython Evaluator* and connect it to the *Field Type Converter*
-7. In the *Jython* tab of the *Jython Evaluator*, in the *Script* section, enter the following code
+6. Add the **Processor** called **Jython Evaluator** and connect it to the **Field Type Converter**
+7. In the **Jython** tab of the **Jython Evaluator**, in the **Script** section, enter the following code
 ```python
 for record in records:
   try:
@@ -153,15 +153,15 @@ for record in records:
     # Send record to error
     error.write(record, str(e))
 ```
-8. Add the *Destination* called *Cassandra Java Driver* and connect it to the *Jython Evaluator*
+8. Add the **Destination** called **Cassandra Java Driver** and connect it to the **Jython Evaluator**
 9. Add the following **Required Fields** in the Cassandra Destination General Tab (without this step the pipeline will not populate Cassandra)
 ![StreamSets Pipeline](README.photos/StreamsetsCassandraRequired.png)
 6. In the Cassandra Destination **Cassandra** Tab:  
   * Add **dse** as the contact point
   * V4 as the protocol version
 ![StreamSets Pipeline](README.photos/StreamsetsCassandraColumns.png)
-5. Click on the pipeline canvas, got to the *Error Records* tab, choose to discard the error messages
-7. Start both of the pipleines (start *Kafka to Cassandra* before starting *Avro to Cassandra*).  If records don't flow, try stopping, resetting the origin, and starting the *Avro to Kafka* pipeline while leaving the *Kafka to Cassandra* pipeline running
+5. Click on the pipeline canvas, got to the **Error Records** tab, choose to discard the error messages
+7. Start both of the pipleines (start **Kafka to Cassandra** before starting **Avro to Cassandra**).  If records don't flow, try stopping, resetting the origin, and starting the **Avro to Kafka** pipeline while leaving the **Kafka to Cassandra** pipeline running
 8. Ensure Data flowed into the cassandra table
 ```bash
 docker exec dse cqlsh -e "select * from avro.cctest"
