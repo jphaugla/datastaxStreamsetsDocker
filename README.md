@@ -187,7 +187,7 @@ docker exec dse cqlsh -e "select * from avro.cctest"
 * DataStax Docker Images
 [https://github.com/datastax/docker-images/#datastax-platform-overview](https://github.com/datastax/docker-images/#datastax-platform-overview).
 
-* [StreamSets](https://www.streamsets.com)
+* [StreamSets Docker Images](https://github.com/streamsets/datacollector-docker.git)
 
 * Test data came from a StreamSets tutorial github but I have copied the data into this github.
  [https://github.com/streamsets/tutorials/blob/master/sample_data/](https://github.com/streamsets/tutorials/blob/master/sample_data/)
