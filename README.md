@@ -94,7 +94,7 @@ In the data format tab, choose Avro.
 
 1. Drag a **Kafka** Producer Destination to the canvas and connect the Directory to the Kafka Producer
 2. Click on the Kafka Producer.  
-3. Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`kafka1:9092`. Set Topic to the name of your Kafka topic (TestRun). And set Data Format to SDC Record.
+3. On the General Tab, set the Stage Library version to *Apache Kafka 0.11.0.0*.  Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`kafka1:9092`. Set Topic to the name of your Kafka topic (TestRun).  Finally, the set Data Format to SDC Record.
 ![Kafka Producer](README.photos/KafkaProducer.png)
 4. In the *Data Format* tab, choose SDC Record
 *SDC Record is the internal data format that is highly optimized for use within StreamSets Data Collector (SDC). Since we are going to be using another Data Collector pipeline to read from this Kafka topic we can use SDC Record to optimize performance. If you have a custom Kafka Consumer on the other side you may want to use one of the other data formats and decode it accordingly.*
@@ -115,7 +115,7 @@ Once stage properties are added, the pipeline will look like this:
 
 1.  Create another New Pipeline *Kafka to Cassandra*
 2.  Add the **Kafka** consumer origin to the canvas
-3.  Provide the following information under the **Kafka** tab of the **Kafka** origin.
+3.  Under the General tab, select *Apache Kafka 0.11.0.0 for the *Stage Libary*.  Provide the following information under the **Kafka** tab of the **Kafka** origin.
 ![Kafka Origin](README.photos/KafkaOriginTab.png)
 Choose SDC Record under the Data Format tab
 4. Add the *Processor* called *Field Type Converter* to the Pipeline and connect it to the Kafka Consumer

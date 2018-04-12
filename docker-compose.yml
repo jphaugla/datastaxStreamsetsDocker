@@ -36,13 +36,13 @@ services:
       - ./cache:/var/lib/cassandra/saved_caches
       - ./confy:/etc/dse/conf
   zookeeper:
-    image: wurstmeister/zookeeper:3.4.6
+    image: wurstmeister/zookeeper
     container_name: "zoo1"
     hostname: "zoo1"
     ports:
       - "2181:2181"
   kafka:
-    image: wurstmeister/kafka:0.10.1.1
+    image: wurstmeister/kafka:0.11.0.1
     container_name: "kafka1"
     hostname: "kafka1"
     ports:
