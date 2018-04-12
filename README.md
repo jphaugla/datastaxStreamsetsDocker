@@ -55,7 +55,7 @@ As an alternative to creating these pipelines, the pipelines are exported in the
 
 StreamSets pipeline documentation can be found here:
 
-https://streamsets.com/documentation/Data Collector/latest/help/#Data Collector/UserGuide/Pipeline_Design/What_isa_Pipeline.html
+[https://streamsets.com/documentation/Data Collector/latest/help/#Data Collector/UserGuide/Pipeline_Design/What_isa_Pipeline.html](https://streamsets.com/documentation/Data Collector/latest/help/#Data Collector/UserGuide/Pipeline_Design/What_isa_Pipeline.html)
 
 A pipeline describes the flow of data from the origin system to destination systems and defines how to transform the data along the way.
 
