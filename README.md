@@ -51,11 +51,11 @@ docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 
 ## Running and Creating StreamSets Pipelines
 
-At this point, you have a choices between two options: Easy and Advanced.  Easy is import pre-configured pipelines and run.  Advanced approach of manually creating the pipelines and then running.
+At this point, you have a choice between two options: Easy and Advanced.  Easy way is to import pre-configured pipelines and run.  Advanced approach is manual creating the pipelines and then running.  
 
 ### Easy - Get things running as fast as possible
 
-The following screencast shows what we're going to do.  See below for instructions.
+The following screencast shows what we're going to do.  See below for step-by-step instructions.
 
 ![StreamsProducer](README.photos/DataStaxStreamSetsKafka.gif)
 
