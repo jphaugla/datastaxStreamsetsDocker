@@ -55,11 +55,11 @@ At this point, you have a choices between two options: Easy and Advanced.  Easy 
 
 ### Easy - Get things running as fast as possible
 
-Here's what we're going to do
+The following screencast shows what we're going to do.  See below for instructions.
 
 ![StreamsProducer](README.photos/DataStaxStreamSetsKafka.gif)
 
-The steps shown in the above screencast
+The steps shown in the above screencast (starting at "Get Started" blue screen)
 
 1. Login to StreamSets Data Collector at http://localhost:18630 with username: admin password: admin
 2. Import the `exports/Kafka Consumer to DSE.json` pipeline and start
