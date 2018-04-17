@@ -1,6 +1,7 @@
 # Streaming from Kafka to DataStax with StreamSets
 Provides a quick-start example of streaming data from Kafka to DataStax Enterprise (DSE) with StreamSets Data Collector.
 
+upgraded to DataStax 6.0
 
 ## Overview
 In this tutorial, the StreamSets Data Collector is used to create streaming data pipelines to write to/from Kafka and ultimately landing in DSE.  The high-level architecture is shown in the following diagram:
@@ -10,38 +11,26 @@ In this tutorial, the StreamSets Data Collector is used to create streaming data
 ## Requirements
 
 1. Docker engine (Free CE version works fine https://www.docker.com/community-edition)
-2. Docker Store login https://store.docker.com/
-3. In order to use DataStax Docker images, you need to complete a checkout form on the Docker Store.  The checkout is free and is required to associate your Docker Store login with permission to download the DataStax Enterprise Server container.
-
-To checkout
-  * Goto https://store.docker.com/images/datastax
-  * Click `Proceed to Checkout` as shown
-
-![DataStax Docker Store site](README.photos/DataStaxDockerStore.png)
-
-And complete the form.
-
 ## Getting Started
-1. Open terminal and login to docker; i.e. `docker login`
-2. Pull this github repo into `datastaxStreamsetsDocker` directory  
+1. Pull this github repo into `datastaxStreamsetsDocker` directory  
     ```bash
     git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git
     ```
-3. `cd datastaxStreamsetsDocker`
-4. Start docker containers with `docker-compose up -d`
-5. Wait 1 minute for containers to startup
+2. `cd datastaxStreamsetsDocker`
+3. Start docker containers with `docker-compose up -d`
+4. Wait 1 minute for containers to startup
 5. Verify DataStax is up-and-running (again, see previous step, this may take a minute or two for Docker images):
 ```bash
-docker exec dse cqlsh -u cassandra -p cassandra -e "desc keyspaces";
+docker exec dse cqlsh dse -u cassandra -p cassandra -e "desc keyspaces";
 ```
 6. Create keyspace and table in DSE:
 ```bash
 docker cp src/create_table.cql dse:/opt/dse;
-docker exec dse cqlsh -f /opt/dse/create_table.cql
+docker exec dse cqlsh dse -f /opt/dse/create_table.cql
 ```
 7. Verify table exists:
 ```bash
-docker exec dse cqlsh -e "desc avro.cctest"
+docker exec dse cqlsh dse -e "desc avro.cctest"
 ```
 8. Create the directory and add the avro source file to the StreamSets Data Collector
 ```bash
@@ -64,7 +53,7 @@ The steps shown in the above screencast
 1. Login to StreamSets Data Collector at http://localhost:18630 with username: admin password: admin
 2. Import the `exports/Kafka Consumer to DSE.json` pipeline and start
 3. Import the `exports/Files to Kafka.json` pipeline and start
-4. Verify data has landed in DSE from terminal with `docker exec dse cqlsh -e "select * from avro.cctest limit 10"`
+4. Verify data has landed in DSE from terminal with `docker exec dse cqlsh dse -e "select * from avro.cctest limit 10"`
 
 That's it.  Easy button.
 
@@ -183,7 +172,7 @@ for record in records:
 7. Start both of the pipleines (start **Kafka to Cassandra** before starting **Avro to Cassandra**).  If records don't flow, try stopping, resetting the origin, and starting the **Avro to Kafka** pipeline while leaving the **Kafka to Cassandra** pipeline running
 8. Ensure Data flowed into the cassandra table
 ```bash
-docker exec dse cqlsh -e "select * from avro.cctest"
+docker exec dse cqlsh dse -e "select * from avro.cctest"
 ```
 
 ## Completed!

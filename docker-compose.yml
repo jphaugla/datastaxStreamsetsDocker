@@ -11,7 +11,7 @@ services:
       - ./dctutorial:/home/sdc/tutorial/origin2
       - ./dcdata:/data
   main_node:
-    image: "store/datastax/dse-server:5.1.6"
+    image: "datastax/dse-server"
     container_name: "dse"
     hostname: dse
     ports:
