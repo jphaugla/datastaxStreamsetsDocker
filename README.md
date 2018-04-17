@@ -164,13 +164,13 @@ for record in records:
 8. Add the **Destination** called **Cassandra Java Driver** and connect it to the **Jython Evaluator**
 9. Add the following **Required Fields** in the Cassandra Destination General Tab (without this step the pipeline will not populate Cassandra)
 ![StreamSets Pipeline](README.photos/StreamsetsCassandraRequired.png)
-6. In the Cassandra Destination **Cassandra** Tab:  
+10. In the Cassandra Destination **Cassandra** Tab:  
   * Add **dse** as the contact point
   * V4 as the protocol version
 ![StreamSets Pipeline](README.photos/StreamsetsCassandraColumns.png)
-5. Click on the pipeline canvas, got to the **Error Records** tab, choose to discard the error messages
-7. Start both of the pipleines (start **Kafka to Cassandra** before starting **Avro to Cassandra**).  If records don't flow, try stopping, resetting the origin, and starting the **Avro to Kafka** pipeline while leaving the **Kafka to Cassandra** pipeline running
-8. Ensure Data flowed into the cassandra table
+11. Click on the pipeline canvas, got to the **Error Records** tab, choose to discard the error messages
+12. Start both of the pipleines (start **Kafka to Cassandra** before starting **Avro to Cassandra**).  If records don't flow, try stopping, resetting the origin, and starting the **Avro to Kafka** pipeline while leaving the **Kafka to Cassandra** pipeline running
+13. Ensure Data flowed into the cassandra table
 ```bash
 docker exec dse cqlsh dse -e "select * from avro.cctest"
 ```
