@@ -40,15 +40,15 @@ docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 
 ## Running and Creating StreamSets Pipelines
 
-At this point, you have a choices between two options: Easy and Advanced.  Easy is import pre-configured pipelines and run.  Advanced approach of manually creating the pipelines and then running.
+At this point, you have a choice between two options: Easy and Advanced.  Easy way is to import pre-configured pipelines and run.  Advanced approach is manual creating the pipelines and then running.  
 
 ### Easy - Get things running as fast as possible
 
-Here's what we're going to do
+The following screencast shows what we're going to do.  See below for step-by-step instructions.
 
 ![StreamsProducer](README.photos/DataStaxStreamSetsKafka.gif)
 
-The steps shown in the above screencast
+The steps shown in the above screencast (starting at "Get Started" blue screen)
 
 1. Login to StreamSets Data Collector at http://localhost:18630 with username: admin password: admin
 2. Import the `exports/Kafka Consumer to DSE.json` pipeline and start
