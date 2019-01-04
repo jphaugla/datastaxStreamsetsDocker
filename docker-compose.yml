@@ -7,9 +7,12 @@ services:
     restart: always
     ports:
       - 18630:18630
+    environment:
+      STREAMSETS_LIBRARIES_EXTRA_DIR: /opt/sdc-extras
     volumes:
       - ./dctutorial:/home/sdc/tutorial/origin2
       - ./dcdata:/data
+      - ./sdcextra:/opt/sdc-extras
   main_node:
     image: "datastax/dse-server"
     container_name: "dse"

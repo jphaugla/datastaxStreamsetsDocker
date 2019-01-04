@@ -42,14 +42,15 @@ docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 
 The package manager makes stage libraries available to pipelines.  The following three stage libraries need to be added for the subsequent pipelines.
 
-1. Click on *Package Manager* icon ![Package Manager](README.photos/icon_PackageManager.png)
-2. Select Apache Kafka version (2.0.0 for example)
-3. click the ellipsis buttons and select install
-4. On Install Stage Library, click cancel
-5. log back in to StreamSets Data collector
-6. Select latest *Jython* and install (click cancel on Install Stage Library)
-7. Select latest *Cassandra Java Driver* and install (click cancel on Install Stage Library)
-8. restart streamsets container to make the drivers usable 
+1. Login to StreamSets Data Collector at http://localhost:18630 with username: admin password: admin
+2. Click on *Package Manager* icon ![Package Manager](README.photos/icon_PackageManager.png)
+3. Select Apache Kafka version (2.0.0 for example)
+4. click the ellipsis buttons and select install
+5. On Install Stage Library, click cancel
+6. log back in to StreamSets Data collector
+7. Select latest *Jython* and install (click cancel on Install Stage Library)
+8. Select latest *Cassandra Java Driver* and install (click cancel on Install Stage Library)
+9. restart streamsets container to make the drivers usable 
 ```bash
 docker restart streamdc
 ```
