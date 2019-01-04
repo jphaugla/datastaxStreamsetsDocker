@@ -2,7 +2,7 @@
 Provides a quick-start example of streaming data from Kafka to DataStax Enterprise (DSE) with StreamSets Data Collector.
 
 upgraded to DataStax 6.7
-upgraded to use confluent docker images instead of Wurstmeister images
+upgraded to use latest Wurstmeister images
 
 ## Overview
 In this tutorial, the StreamSets Data Collector is used to create streaming data pipelines to write to/from Kafka and ultimately landing in DSE.  The high-level architecture is shown in the following diagram:
