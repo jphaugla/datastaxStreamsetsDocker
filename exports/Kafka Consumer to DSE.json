@@ -1,11 +1,11 @@
 {
   "pipelineConfig" : {
-    "schemaVersion" : 5,
-    "version" : 8,
-    "pipelineId" : "KafkaConsumertoDSE0765c16a-1836-400d-82a2-f48ad92df058",
+    "schemaVersion" : 6,
+    "version" : 10,
+    "pipelineId" : "KafkaConsumertoDSE2a0fe1a5-ee3a-466d-af36-3e681278fc24",
     "title" : "Kafka Consumer to DSE",
     "description" : "",
-    "uuid" : "cedd1d91-1bf2-4686-9a5b-9782b77b6b1e",
+    "uuid" : "23f02650-57d8-4388-8d06-acfef13b6cb7",
     "configuration" : [ {
       "name" : "executionMode",
       "value" : "STANDALONE"
@@ -80,7 +80,88 @@
       "value" : [ ]
     }, {
       "name" : "statsAggregatorStage",
-      "value" : ""
+      "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1"
+    }, {
+      "name" : "testOriginStage",
+      "value" : "streamsets-datacollector-dev-lib::com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource::3"
+    }, {
+      "name" : "runnerIdleTIme",
+      "value" : 60
+    }, {
+      "name" : "edgeHttpUrl",
+      "value" : "http://localhost:18633"
+    }, {
+      "name" : "logLevel",
+      "value" : "INFO"
+    }, {
+      "name" : "amazonEMRConfig.userRegion",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.userRegionCustom",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.s3StagingUri",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.clusterPrefix",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.clusterId",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.terminateCluster",
+      "value" : false
+    }, {
+      "name" : "amazonEMRConfig.enableEMRDebugging",
+      "value" : true
+    }, {
+      "name" : "amazonEMRConfig.s3LogUri",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.serviceRole",
+      "value" : "EMR_DefaultRole"
+    }, {
+      "name" : "amazonEMRConfig.jobFlowRole",
+      "value" : "EMR_EC2_DefaultRole"
+    }, {
+      "name" : "amazonEMRConfig.visibleToAllUsers",
+      "value" : true
+    }, {
+      "name" : "amazonEMRConfig.loggingEnabled",
+      "value" : true
+    }, {
+      "name" : "amazonEMRConfig.ec2SubnetId",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.masterSecurityGroup",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.slaveSecurityGroup",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.instanceCount",
+      "value" : 2
+    }, {
+      "name" : "amazonEMRConfig.masterInstanceType",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.slaveInstanceType",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.masterInstanceTypeCustom",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.slaveInstanceTypeCustom",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.accessKey",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.secretKey",
+      "value" : null
+    }, {
+      "name" : "amazonEMRConfig.provisionNewCluster",
+      "value" : false
     } ],
     "uiInfo" : {
       "previewConfig" : {
@@ -94,9 +175,10 @@
         "rememberMe" : false
       }
     },
+    "fragments" : [ ],
     "stages" : [ {
       "instanceName" : "KafkaConsumer_01",
-      "library" : "streamsets-datacollector-apache-kafka_0_11-lib",
+      "library" : "streamsets-datacollector-apache-kafka_2_0-lib",
       "stageName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource",
       "stageVersion" : "5",
       "configuration" : [ {
@@ -336,9 +418,12 @@
       }, {
         "name" : "stageOnRecordError",
         "value" : "TO_ERROR"
+      }, {
+        "name" : "kafkaConfigBean.dataFormatConfig.excelHeader",
+        "value" : null
       } ],
       "uiInfo" : {
-        "yPos" : 50,
+        "yPos" : 82.7242431640625,
         "stageType" : "SOURCE",
         "rawSource" : {
           "configuration" : [ {
@@ -360,7 +445,7 @@
         },
         "description" : "",
         "label" : "Kafka Consumer 1",
-        "xPos" : 60
+        "xPos" : 62.6553955078125
       },
       "inputLanes" : [ ],
       "outputLanes" : [ "KafkaConsumer_01OutputLane15216465138470" ],
@@ -413,8 +498,8 @@
       "uiInfo" : {
         "description" : "",
         "label" : "Field Type Converter 1",
-        "xPos" : 280,
-        "yPos" : 50,
+        "xPos" : 297,
+        "yPos" : 54,
         "stageType" : "PROCESSOR"
       },
       "inputLanes" : [ "KafkaConsumer_01OutputLane15216465138470" ],
@@ -451,8 +536,8 @@
       "uiInfo" : {
         "description" : "",
         "label" : "Jython Evaluator 1",
-        "xPos" : 500,
-        "yPos" : 50,
+        "xPos" : 521,
+        "yPos" : 39,
         "stageType" : "PROCESSOR"
       },
       "inputLanes" : [ "FieldTypeConverter_01OutputLane15216465400780" ],
@@ -527,12 +612,51 @@
       }, {
         "name" : "stageRecordPreconditions",
         "value" : [ ]
+      }, {
+        "name" : "conf.tlsConfig.tlsEnabled",
+        "value" : false
+      }, {
+        "name" : "conf.tlsConfig.keyStoreFilePath",
+        "value" : null
+      }, {
+        "name" : "conf.tlsConfig.keyStoreType",
+        "value" : "JKS"
+      }, {
+        "name" : "conf.tlsConfig.keyStorePassword",
+        "value" : null
+      }, {
+        "name" : "conf.tlsConfig.keyStoreAlgorithm",
+        "value" : "SunX509"
+      }, {
+        "name" : "conf.tlsConfig.trustStoreFilePath",
+        "value" : null
+      }, {
+        "name" : "conf.tlsConfig.trustStoreType",
+        "value" : "JKS"
+      }, {
+        "name" : "conf.tlsConfig.trustStorePassword",
+        "value" : null
+      }, {
+        "name" : "conf.tlsConfig.trustStoreAlgorithm",
+        "value" : "SunX509"
+      }, {
+        "name" : "conf.tlsConfig.useDefaultProtocols",
+        "value" : true
+      }, {
+        "name" : "conf.tlsConfig.protocols",
+        "value" : [ ]
+      }, {
+        "name" : "conf.tlsConfig.useDefaultCiperSuites",
+        "value" : true
+      }, {
+        "name" : "conf.tlsConfig.cipherSuites",
+        "value" : [ ]
       } ],
       "uiInfo" : {
         "description" : "",
         "label" : "Cassandra 1",
-        "xPos" : 720,
-        "yPos" : 50,
+        "xPos" : 824,
+        "yPos" : 49,
         "stageType" : "TARGET"
       },
       "inputLanes" : [ "JythonEvaluator_01OutputLane15216467071180" ],
@@ -559,27 +683,44 @@
       "services" : [ ]
     },
     "info" : {
-      "pipelineId" : "KafkaConsumertoDSE0765c16a-1836-400d-82a2-f48ad92df058",
+      "pipelineId" : "KafkaConsumertoDSE2a0fe1a5-ee3a-466d-af36-3e681278fc24",
       "title" : "Kafka Consumer to DSE",
       "description" : "",
-      "created" : 1523570272614,
-      "lastModified" : 1523570925120,
+      "created" : 1523976874107,
+      "lastModified" : 1546468973810,
       "creator" : "admin",
       "lastModifier" : "admin",
       "lastRev" : "0",
-      "uuid" : "cedd1d91-1bf2-4686-9a5b-9782b77b6b1e",
+      "uuid" : "23f02650-57d8-4388-8d06-acfef13b6cb7",
       "valid" : true,
       "metadata" : {
         "labels" : [ ]
       },
-      "name" : "KafkaConsumertoDSE0765c16a-1836-400d-82a2-f48ad92df058",
-      "sdcVersion" : "3.1.3.0",
-      "sdcId" : "65b0cb07-3dda-11e8-87e3-abba566242bb"
+      "name" : "KafkaConsumertoDSE2a0fe1a5-ee3a-466d-af36-3e681278fc24",
+      "sdcVersion" : "3.6.1",
+      "sdcId" : "334fc1ba-424d-11e8-85c1-f34d52d9096e"
     },
     "metadata" : {
       "labels" : [ ]
     },
-    "statsAggregatorStage" : null,
+    "statsAggregatorStage" : {
+      "instanceName" : "Discard_StatsAggregatorStage",
+      "library" : "streamsets-datacollector-basic-lib",
+      "stageName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+      "stageVersion" : "1",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "description" : "",
+        "label" : "Stats Aggregator - Discard",
+        "xPos" : 940,
+        "yPos" : 50,
+        "stageType" : "TARGET"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ ],
+      "eventLanes" : [ ],
+      "services" : [ ]
+    },
     "startEventStages" : [ {
       "instanceName" : "Discard_StartEventStage",
       "library" : "streamsets-datacollector-basic-lib",
@@ -616,11 +757,252 @@
       "eventLanes" : [ ],
       "services" : [ ]
     } ],
+    "testOriginStage" : {
+      "instanceName" : "DevRawDataSource_TestOriginStage",
+      "library" : "streamsets-datacollector-dev-lib",
+      "stageName" : "com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource",
+      "stageVersion" : "3",
+      "configuration" : [ {
+        "name" : "rawData",
+        "value" : "{\n  \"f1\": \"abc\",\n  \"f2\": \"xyz\",\n  \"f3\": \"lmn\"\n}"
+      }, {
+        "name" : "stopAfterFirstBatch",
+        "value" : false
+      }, {
+        "name" : "stageOnRecordError",
+        "value" : "TO_ERROR"
+      } ],
+      "uiInfo" : {
+        "description" : "",
+        "label" : "Test Origin - Dev Raw Data Source",
+        "xPos" : 940,
+        "yPos" : 50,
+        "stageType" : "SOURCE"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ "DevRawDataSource_TestOriginStageOutputLane15464676997740" ],
+      "eventLanes" : [ ],
+      "services" : [ {
+        "service" : "com.streamsets.pipeline.api.service.dataformats.DataFormatParserService",
+        "serviceVersion" : 1,
+        "configuration" : [ {
+          "name" : "displayFormats",
+          "value" : "DELIMITED,JSON,LOG,SDC_JSON,TEXT,XML"
+        }, {
+          "name" : "dataFormat",
+          "value" : "JSON"
+        }, {
+          "name" : "dataFormatConfig.compression",
+          "value" : "NONE"
+        }, {
+          "name" : "dataFormatConfig.filePatternInArchive",
+          "value" : "*"
+        }, {
+          "name" : "dataFormatConfig.charset",
+          "value" : "UTF-8"
+        }, {
+          "name" : "dataFormatConfig.removeCtrlChars",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.textMaxLineLen",
+          "value" : 1024
+        }, {
+          "name" : "dataFormatConfig.useCustomDelimiter",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.customDelimiter",
+          "value" : "\\r\\n"
+        }, {
+          "name" : "dataFormatConfig.includeCustomDelimiterInTheText",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.jsonContent",
+          "value" : "MULTIPLE_OBJECTS"
+        }, {
+          "name" : "dataFormatConfig.jsonMaxObjectLen",
+          "value" : 4096
+        }, {
+          "name" : "dataFormatConfig.csvFileFormat",
+          "value" : "CSV"
+        }, {
+          "name" : "dataFormatConfig.csvHeader",
+          "value" : "NO_HEADER"
+        }, {
+          "name" : "dataFormatConfig.csvAllowExtraColumns",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.csvExtraColumnPrefix",
+          "value" : "_extra_"
+        }, {
+          "name" : "dataFormatConfig.csvMaxObjectLen",
+          "value" : 1024
+        }, {
+          "name" : "dataFormatConfig.csvCustomDelimiter",
+          "value" : "|"
+        }, {
+          "name" : "dataFormatConfig.csvCustomEscape",
+          "value" : "\\"
+        }, {
+          "name" : "dataFormatConfig.csvCustomQuote",
+          "value" : "\""
+        }, {
+          "name" : "dataFormatConfig.csvEnableComments",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.csvCommentMarker",
+          "value" : "#"
+        }, {
+          "name" : "dataFormatConfig.csvIgnoreEmptyLines",
+          "value" : true
+        }, {
+          "name" : "dataFormatConfig.csvRecordType",
+          "value" : "LIST_MAP"
+        }, {
+          "name" : "dataFormatConfig.csvSkipStartLines",
+          "value" : 0
+        }, {
+          "name" : "dataFormatConfig.parseNull",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.nullConstant",
+          "value" : "\\\\N"
+        }, {
+          "name" : "dataFormatConfig.xmlRecordElement",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.includeFieldXpathAttributes",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.xPathNamespaceContext",
+          "value" : [ ]
+        }, {
+          "name" : "dataFormatConfig.outputFieldAttributes",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.xmlMaxObjectLen",
+          "value" : 4096
+        }, {
+          "name" : "dataFormatConfig.logMode",
+          "value" : "COMMON_LOG_FORMAT"
+        }, {
+          "name" : "dataFormatConfig.logMaxObjectLen",
+          "value" : 1024
+        }, {
+          "name" : "dataFormatConfig.retainOriginalLine",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.customLogFormat",
+          "value" : "%h %l %u %t \"%r\" %>s %b"
+        }, {
+          "name" : "dataFormatConfig.regex",
+          "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+        }, {
+          "name" : "dataFormatConfig.fieldPathsToGroupName",
+          "value" : [ {
+            "fieldPath" : "/",
+            "group" : 1
+          } ]
+        }, {
+          "name" : "dataFormatConfig.grokPatternDefinition",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.grokPattern",
+          "value" : "%{COMMONAPACHELOG}"
+        }, {
+          "name" : "dataFormatConfig.onParseError",
+          "value" : "ERROR"
+        }, {
+          "name" : "dataFormatConfig.maxStackTraceLines",
+          "value" : 50
+        }, {
+          "name" : "dataFormatConfig.enableLog4jCustomLogFormat",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.log4jCustomLogFormat",
+          "value" : "%r [%t] %-5p %c %x - %m%n"
+        }, {
+          "name" : "dataFormatConfig.avroSchemaSource",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.avroSchema",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.schemaRegistryUrls",
+          "value" : [ ]
+        }, {
+          "name" : "dataFormatConfig.schemaLookupMode",
+          "value" : "SUBJECT"
+        }, {
+          "name" : "dataFormatConfig.subject",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.schemaId",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.protoDescriptorFile",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.messageType",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.isDelimited",
+          "value" : true
+        }, {
+          "name" : "dataFormatConfig.binaryMaxObjectLen",
+          "value" : 1024
+        }, {
+          "name" : "dataFormatConfig.datagramMode",
+          "value" : "SYSLOG"
+        }, {
+          "name" : "dataFormatConfig.typesDbPath",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.convertTime",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.excludeInterval",
+          "value" : true
+        }, {
+          "name" : "dataFormatConfig.authFilePath",
+          "value" : null
+        }, {
+          "name" : "dataFormatConfig.netflowOutputValuesMode",
+          "value" : "RAW_AND_INTERPRETED"
+        }, {
+          "name" : "dataFormatConfig.maxTemplateCacheSize",
+          "value" : -1
+        }, {
+          "name" : "dataFormatConfig.templateCacheTimeoutMs",
+          "value" : -1
+        }, {
+          "name" : "dataFormatConfig.netflowOutputValuesModeDatagram",
+          "value" : "RAW_AND_INTERPRETED"
+        }, {
+          "name" : "dataFormatConfig.maxTemplateCacheSizeDatagram",
+          "value" : -1
+        }, {
+          "name" : "dataFormatConfig.templateCacheTimeoutMsDatagram",
+          "value" : -1
+        }, {
+          "name" : "dataFormatConfig.wholeFileMaxObjectLen",
+          "value" : 8192
+        }, {
+          "name" : "dataFormatConfig.rateLimit",
+          "value" : "-1"
+        }, {
+          "name" : "dataFormatConfig.verifyChecksum",
+          "value" : false
+        }, {
+          "name" : "dataFormatConfig.excelHeader",
+          "value" : null
+        } ]
+      } ]
+    },
     "valid" : true,
     "issues" : {
-      "pipelineIssues" : [ ],
       "stageIssues" : { },
-      "issueCount" : 0
+      "issueCount" : 0,
+      "pipelineIssues" : [ ]
     },
     "previewable" : true
   },
@@ -685,7 +1067,7 @@
     } ],
     "dataRuleDefinitions" : [ ],
     "driftRuleDefinitions" : [ ],
-    "uuid" : "22bf2635-8ca7-4051-b74e-6c8b4ee0901d",
+    "uuid" : "03fe00af-fd51-4048-9943-0e64bcdc1fe5",
     "configuration" : [ {
       "name" : "emailIDs",
       "value" : [ ]
