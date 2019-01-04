@@ -38,6 +38,22 @@ docker exec dse cqlsh dse -e "desc avro.cctest"
 docker cp src/data/ccsample streamdc:/home/sdc/tutorial/origin2;
 ```
 
+## Add Additional Libraries to Stage Libraries section
+
+The package manager makes stage libraries available to pipelines.  The following three stage libraries need to be added for the subsequent pipelines.
+
+1. Click on *Package Manager* icon ![Package Manager](README.photos/icon_PackageManager.png)
+2. Select Apache Kafka version (2.0.0 for example)
+3. click the ellipsis buttons and select install
+4. On Install Stage Library, click cancel
+5. log back in to StreamSets Data collector
+6. Select latest *Jython* and install (click cancel on Install Stage Library)
+7. Select latest *Cassandra Java Driver* and install (click cancel on Install Stage Library)
+8. restart streamsets container to make the drivers usable 
+```bash
+docker restart streamdc
+```
+
 
 ## Running and Creating StreamSets Pipelines
 
@@ -103,7 +119,7 @@ In the data format tab, choose Avro.
 
 1. Drag a **Kafka** Producer Destination to the canvas and connect the Directory to the Kafka Producer
 2. Click on the Kafka Producer.  
-3. On the General Tab, set the Stage Library version to **Apache Kafka 0.11.0.0**.  Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`kafka1:9092`. Set Topic to the name of your Kafka topic (TestRun).  Finally, the set Data Format to SDC Record.
+3. On the General Tab, set the Stage Library version to **Apache Kafka 2.0.0.  Go to the Kafka tab and set the Broker URI property to point to your Kafka broker e.g.`kafka1:9092`. Set Topic to the name of your Kafka topic (TestRun).  Finally, the set Data Format to SDC Record.
 ![Kafka Producer](README.photos/KafkaProducer.png)
 4. In the **Data Format** tab, choose SDC Record
 *SDC Record is the internal data format that is highly optimized for use within StreamSets Data Collector (SDC). Since we are going to be using another Data Collector pipeline to read from this Kafka topic we can use SDC Record to optimize performance. If you have a custom Kafka Consumer on the other side you may want to use one of the other data formats and decode it accordingly.*
