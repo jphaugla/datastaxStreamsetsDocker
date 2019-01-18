@@ -15,9 +15,9 @@ In this tutorial, the StreamSets Data Collector is used to create streaming data
 ## Getting Started
 1. Pull this github repo into `datastaxStreamsetsDocker` directory  
     ```bash
-    git clone https://github.com/jphaugla/datastaxStreamsetsDocker.git
+    git clone https://github.com/jatin7/dse_streamsets_docker.git
     ```
-2. `cd datastaxStreamsetsDocker`
+2. `cd dse_streamsets_docker`
 3. Start docker containers with `docker-compose up -d`
 4. Wait 1 minute for containers to startup
 5. Verify DataStax is up-and-running (again, see previous step, this may take a minute or two for Docker images):
